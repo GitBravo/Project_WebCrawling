@@ -3,7 +3,6 @@ package kr.ac.kumoh.s20130053.okky;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 public class community extends AppCompatActivity {
-    int age = 10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +56,7 @@ public class community extends AppCompatActivity {
             int count;
             try {
                 Document doc = Jsoup.connect("https://www.naver.com/").get();
-//                Elements links = doc.select("a[href]");
                 Elements links = doc.select("span.ah_k"); // 셀렉터로 <span> 태그 중 class 값이 ah_k(검색어) 인 내용을 획득
-//                Elements links = doc.select("div.panel panel-default");
 
                 count = 1;
                 for (Element link : links) {
