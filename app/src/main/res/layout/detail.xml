@@ -5,19 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".community">
-
-    <Button
-        android:id="@+id/button"
-        android:text="refresh"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    tools:context=".detail">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textDetail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </TextView>
-
+        android:layout_height="wrap_content"/>
 </LinearLayout>
