@@ -72,7 +72,14 @@ public class board extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 // 아이템 클릭 시 액션
-                startActivity(new Intent(board.this, detail.class));
+                Intent intent = new Intent(board.this, detail.class);
+                intent.putExtra("mTitle", mTitle.get(position)); // 글제목
+                intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글주소
+                intent.putExtra("mId", mId.get(position)); // 아이디
+                intent.putExtra("mDate", mDate.get(position)); // 게시날짜
+                intent.putExtra("mRecCount", mCount.get(3*position+1)); // 추천수
+                intent.putExtra("mHits", mCount.get(3*position+2)); // 조회수
+                startActivity(intent);
             }
 
             @Override
@@ -215,6 +222,4 @@ public class board extends AppCompatActivity {
             mActivityReference.get().mSwipeRefreshLayout.setRefreshing(false);
         }
     }
-
-
 }
