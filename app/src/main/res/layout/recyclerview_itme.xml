@@ -16,14 +16,17 @@
             android:id="@+id/TextView_titleItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="임시제목"/>
+            android:layout_weight="11"
+            android:textColor="#000"
+            android:textSize="16sp"
+            android:gravity="start"/>
 
         <TextView
             android:id="@+id/TextView_commentItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="end"/>
     </LinearLayout>
 
     <LinearLayout
@@ -37,13 +40,16 @@
             android:id="@+id/TextView_dateItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="12sp"
+            android:gravity="start"/>
 
         <TextView
             android:id="@+id/TextView_accountItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="end"/>
     </LinearLayout>
 
     <View

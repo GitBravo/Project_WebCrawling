@@ -12,11 +12,17 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private Context mContext;
-    private ArrayList<String[]> mArray;
+    private ArrayList<String> mArray;
+    private ArrayList<String> mComCount;
+    private ArrayList<String> mDate;
+    private ArrayList<String> mId;
 
-    RecyclerViewAdapter(Context context, ArrayList<String[]> array) {
+    RecyclerViewAdapter(Context context, ArrayList<String> title, ArrayList<String> comCount, ArrayList<String> date, ArrayList<String> id) {
         this.mContext = context;
-        this.mArray = array;
+        this.mArray = title;
+        this.mComCount = comCount;
+        this.mDate = date;
+        this.mId = id;
     }
 
     @NonNull
@@ -29,10 +35,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mTitle.setText(mArray.get(position)[0]);
-        holder.mComment.setText(mArray.get(position)[1]);
-//        holder.mDate.setText(mArray.get(position)[2]);
-//        holder.mAccount.setText(mArray.get(position)[3]);
+        holder.mTitle.setText(mArray.get(position)); // 제목
+        holder.mComment.setText(mComCount.get(3*position)); // 덧글수
+        holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(3*position+1) + "ㆍ" + mComCount.get(3*position+2)); // 게시날짜ㆍ추천수ㆍ조회수
+        holder.mAccount.setText(mId.get(position)); // 아이디
     }
 
     @Override

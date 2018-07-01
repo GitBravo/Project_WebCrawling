@@ -23,10 +23,12 @@ public class board extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerViewAdapter mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
-    private EndlessRecyclerViewScrollListener mScrollListener;
-    private ArrayList<String[]> mBoardContent;
+    private RecyclerViewEndlessScrollListener mScrollListener;
     private RecyclerView mRecyclerView;
     private int currentPage;
+
+    // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 유저 주소, 활동점수, 게시시간
+    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mId_Href, mActPoint, mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +38,21 @@ public class board extends AppCompatActivity {
         // 최초 페이지 번호
         currentPage = 0;
 
+        // 각 게시글에 대한 정보를 저장하는 변수 9개 객체 할당
+        mTitle = new ArrayList<>();
+        mTitle_Href = new ArrayList<>();
+        mCount = new ArrayList<>();
+        mId = new ArrayList<>();
+        mId_Href = new ArrayList<>();
+        mActPoint = new ArrayList<>();
+        mDate = new ArrayList<>();
+
         // 어레이리스트, 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
-        mBoardContent = new ArrayList<>();
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new RecyclerViewAdapter(this, mBoardContent);
+        mAdapter = new RecyclerViewAdapter(this, mTitle, mCount, mDate, mId);
 
         // 스크롤 리스너 객체 생성 후 스크롤 리스너 등록
-        mScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
+        mScrollListener = new RecyclerViewEndlessScrollListener(mLinearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // 스크롤 최하단 도착 시 액션
@@ -58,7 +68,7 @@ public class board extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(mScrollListener);
-        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mRecyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 // 아이템 클릭 시 액션
@@ -102,8 +112,15 @@ public class board extends AppCompatActivity {
             mActivityReference = new WeakReference<>(context);
             mPage = page;
 
-            if (isRefresh)
-                mActivityReference.get().mBoardContent.clear();
+            if (isRefresh) {
+                mActivityReference.get().mTitle.clear();
+                mActivityReference.get().mTitle_Href.clear();
+                mActivityReference.get().mCount.clear();
+                mActivityReference.get().mId.clear();
+                mActivityReference.get().mId_Href.clear();
+                mActivityReference.get().mActPoint.clear();
+                mActivityReference.get().mDate.clear();
+            }
         }
 
         @Override
@@ -114,45 +131,73 @@ public class board extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            int boardCount;
             try {
-                Document doc = Jsoup.connect("https://okky.kr/articles/community?offset=" + (mPage * 20) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
                  * div.className a : 클래스명 항목 중 a 태그만 가져오기
                  * input[name=btnK] : input 태그의 name 속성값이 btnK 인것을 가져오기
                  * */
+                Document doc = Jsoup.connect("https://okky.kr/articles/community?offset=" + (mPage * 20) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
 
-                // 게시글 제목, 게시글내용주소
+                // 1. 게시글 제목 2. 게시글 주소
                 Elements title = doc.select("div.list-title-wrapper.clearfix " +
                         "h5.list-group-item-heading.list-group-item-evaluate a");
+                boardCount = 1;
+                for (Element link : title) {
+                    if (boardCount > 20)
+                        break;
+                    mActivityReference.get().mTitle.add(link.text().trim());
+                    mActivityReference.get().mTitle_Href.add(link.attr("abs:href"));
+                    boardCount++;
+                }
 
                 // 게시글 덧글수, 추천수, 조회수. 게시글당 3개씩 나옴
-                Elements count = doc.select("div.list-group-item-summary.clearfix " +
+                Elements recCount = doc.select("div.list-group-item-summary.clearfix " +
                         "ul " +
                         "li");
+                boardCount = 1;
+                for (Element link : recCount) {
+                    if (boardCount > 60)
+                        break;
+                    mActivityReference.get().mCount.add(link.text().trim());
+                    boardCount++;
+                }
 
                 // 게시글 아이디, 유저정보주소
                 Elements account = doc.select("div.avatar-info a");
+                boardCount = 1;
+                for (Element link : account) {
+                    if (boardCount > 20)
+                        break;
+                    mActivityReference.get().mId.add(link.text().trim());
+                    mActivityReference.get().mId_Href.add(link.attr("abs:href"));
+                    boardCount++;
+                }
 
                 // 활동점수
-                Elements activityPoint = doc.select("div.avatar-info " +
+                Elements actPoint = doc.select("div.avatar-info " +
                         "div.activity");
+                boardCount = 1;
+                for (Element link : actPoint) {
+                    if (boardCount > 20)
+                        break;
+                    mActivityReference.get().mActPoint.add(link.text().trim());
+                    boardCount++;
+                }
 
                 // 게시시간
                 Elements date = doc.select("div.avatar-info " +
                         "div.date-created " +
                         "span.timeago");
-
-                int boardCount = 1;
-                for (Element link : title) {
+                boardCount = 1;
+                for (Element link : date) {
                     if (boardCount > 20)
                         break;
-                    // 게시글 제목, 게시글 주소, 덧글수, 추천수, 조회수, 아이디, 유저 주소, 활동점수, 게시시간
-
-                    // ★★★★★★★★★★★★★★★★여기부터 코딩시작★★★★★★★★★★★★★★★★
-                    mActivityReference.get().mBoardContent.add(new String[]{link.text().trim(), link.attr("abs:href")});
+                    mActivityReference.get().mDate.add(link.text().trim());
                     boardCount++;
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -163,7 +208,7 @@ public class board extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
 
-            // 아답터 데이터 체인지
+            // 로컬 데이터 변경
             mActivityReference.get().mAdapter.notifyDataSetChanged();
 
             // 리프레쉬 아이콘 제거
