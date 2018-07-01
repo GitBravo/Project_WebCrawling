@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -21,26 +21,72 @@ import java.util.ArrayList;
 
 public class board extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerViewAdapter mAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+    private EndlessRecyclerViewScrollListener mScrollListener;
+    private ArrayList<String[]> mBoardContent;
+    private RecyclerView mRecyclerView;
+    private int currentPage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.board);
 
-        new JsoupAsyncTask(board.this).execute();
+        // 최초 페이지 번호
+        currentPage = 0;
 
-        // 글 새로고침 버튼
+        // 어레이리스트, 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
+        mBoardContent = new ArrayList<>();
+        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mAdapter = new RecyclerViewAdapter(this, mBoardContent);
+
+        // 스크롤 리스너 객체 생성 후 스크롤 리스너 등록
+        mScrollListener = new EndlessRecyclerViewScrollListener(mLinearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // 스크롤 최하단 도착 시 액션
+                Toast.makeText(board.this, "최하단!", Toast.LENGTH_SHORT).show();
+                new JsoupAsyncTask(board.this, false, currentPage++).execute();
+                mScrollListener.resetState();
+            }
+        };
+
+        // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
+        mRecyclerView = findViewById(R.id.recyclerView);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnScrollListener(mScrollListener);
+        mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // 아이템 클릭 시 액션
+                startActivity(new Intent(board.this, detail.class));
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+
+        // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new JsoupAsyncTask(board.this).execute();
+                new JsoupAsyncTask(board.this, true, 0).execute();
+                currentPage = 1;
             }
         });
+
+        // 최초 실행시 게시글 불러오기
+        new JsoupAsyncTask(board.this, true, currentPage++).execute();
     }
 
 
-    private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> implements AdapterView.OnItemClickListener {
+    private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
         /* Activity 클래스 하위에 존재하는 Non-static 내부 클래스는 Activity 클래스 보다
         오래 가지고 살아있기 때문에 GC 이 되지 않는다. 따라서 이러한 문제 때문에 메모리 누수가
         발생할 수 있다.
@@ -49,12 +95,15 @@ public class board extends AppCompatActivity {
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
         private WeakReference<board> mActivityReference;
-        private ArrayList<String[]> mBoardContent;
+        private int mPage;
 
-        JsoupAsyncTask(board context) {
+        JsoupAsyncTask(board context, boolean isRefresh, int page) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
-            mBoardContent = new ArrayList<>();
+            mPage = page;
+
+            if (isRefresh)
+                mActivityReference.get().mBoardContent.clear();
         }
 
         @Override
@@ -66,7 +115,7 @@ public class board extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                Document doc = Jsoup.connect("https://okky.kr/articles/community").get(); // 타겟 페이지 URL
+                Document doc = Jsoup.connect("https://okky.kr/articles/community?offset=" + (mPage * 20) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
                  * div.className a : 클래스명 항목 중 a 태그만 가져오기
@@ -101,11 +150,9 @@ public class board extends AppCompatActivity {
                     // 게시글 제목, 게시글 주소, 덧글수, 추천수, 조회수, 아이디, 유저 주소, 활동점수, 게시시간
 
                     // ★★★★★★★★★★★★★★★★여기부터 코딩시작★★★★★★★★★★★★★★★★
-                    mBoardContent.add(new String[]{link.text().trim(), link.attr("abs:href")});
-
+                    mActivityReference.get().mBoardContent.add(new String[]{link.text().trim(), link.attr("abs:href")});
                     boardCount++;
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -116,39 +163,11 @@ public class board extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
 
-            // 액티비티 객체 참조 획득. 만약 획득할 수 없다면 리턴.
-            final board activity = mActivityReference.get();
-            if (activity == null || activity.isFinishing())
-                return;
-
-            // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 선언
-            LinearLayoutManager layoutManager = new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(activity, mBoardContent);
-
-            // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
-            RecyclerView recyclerView = activity.findViewById(R.id.recyclerView);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(adapter);
-            recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(activity, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    activity.startActivity(new Intent(activity, detail.class));
-                }
-
-                @Override
-                public void onLongItemClick(View view, int position) {
-
-                }
-            }));
+            // 아답터 데이터 체인지
+            mActivityReference.get().mAdapter.notifyDataSetChanged();
 
             // 리프레쉬 아이콘 제거
-            activity.mSwipeRefreshLayout.setRefreshing(false);
-        }
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            mActivityReference.get().startActivity(new Intent(mActivityReference.get(), detail.class));
+            mActivityReference.get().mSwipeRefreshLayout.setRefreshing(false);
         }
     }
 
