@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">OKKY</string>
+    <string name="DrawerOpen">DrawerOpen</string>
+    <string name="DrawerClose">DrawerClose</string>
 </resources>

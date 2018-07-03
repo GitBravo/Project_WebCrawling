@@ -2,7 +2,6 @@ package kr.ac.kumoh.s20130053.okky;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -14,6 +13,7 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class detail extends AppCompatActivity {
     private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits;
@@ -43,6 +43,7 @@ public class detail extends AppCompatActivity {
         // SupportActionBar 의 제목을 게시글 제목으로 변경
         getSupportActionBar().setTitle(mTitle);
 
+        // 게시글 내용 및 덧글 로드
         new JsoupAsyncTask(this).execute();
 
     }
@@ -56,11 +57,13 @@ public class detail extends AppCompatActivity {
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
         private WeakReference<detail> mActivityReference;
-        private String content;
+        private String content; // 게시글 내용
+        private ArrayList<String> comm;
 
         JsoupAsyncTask(detail context) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
+            comm = new ArrayList<>();
         }
 
         @Override
@@ -83,11 +86,19 @@ public class detail extends AppCompatActivity {
                 // 게시글 내용 파싱
                 Elements title = doc.select("article.content-text p");
                 for (Element link : title) {
-                    content += link.text().trim();
+                    content += link.text();
                     content += "\n\n";
 //                    mActivityReference.get().mTitle.add(link.text().trim());
 //                    mActivityReference.get().mTitle_Href.add(link.attr("abs:href"));
                 }
+
+                // 덧글 내용 파싱
+//                Elements comment = doc.select("article.list-group-item-text.note-text p");
+//                for (Element link : comment) {
+//                    comm.add(link.text());
+//                    content += link.text();
+//                    content += "\n\n";
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

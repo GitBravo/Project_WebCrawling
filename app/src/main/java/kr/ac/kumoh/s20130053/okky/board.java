@@ -2,11 +2,15 @@ package kr.ac.kumoh.s20130053.okky;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -27,16 +31,29 @@ public class board extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private int currentPage;
 
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+
+    // Back 버튼 연속눌림 시간측정 변수
+    private long time = 0;
+
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 유저 주소, 활동점수, 게시시간
     private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mId_Href, mActPoint, mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.board);
+        setContentView(R.layout.drawerlayout);
 
         // 최초 페이지 번호
         currentPage = 0;
+
+        // 드로워레이아웃 및 토글버튼 초기화 코드
+        mDrawerLayout = findViewById(R.id.drawerLayout);
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.DrawerOpen, R.string.DrawerClose);
+        mDrawerLayout.addDrawerListener(mToggle);
+        mToggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // 각 게시글에 대한 정보를 저장하는 변수 9개 객체 할당
         mTitle = new ArrayList<>();
@@ -102,6 +119,26 @@ public class board extends AppCompatActivity {
         new JsoupAsyncTask(board.this, true, currentPage++).execute();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // 좌상단 토글버튼
+        return super.onOptionsItemSelected(item) || mToggle.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mDrawerLayout = findViewById(R.id.drawerLayout);
+
+        // 드로워레이아웃이 열려있는 상태에서 Back 키 누르면 자동 닫힘
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        else if (System.currentTimeMillis() - time >= 2000) {
+            // Back 버튼 연속 2회 눌러야 종료되도록 설정
+            time = System.currentTimeMillis();
+            Toast.makeText(getApplicationContext(), "한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT).show();
+        } else if (System.currentTimeMillis() - time < 2000)
+            super.onBackPressed();
+    }
 
     private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
         /* Activity 클래스 하위에 존재하는 Non-static 내부 클래스는 Activity 클래스 보다
