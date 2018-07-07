@@ -37,13 +37,6 @@ public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerV
         holder.tvNickname.setText(mNickname.get(position)); // 덧글 아이디
         holder.tvDate.setText(mDate.get(position)); // 덧글 게시날짜
         holder.tvComment.setText(mComment.get(position)); // 덧글 내용
-
-        holder.tvComment.measure(
-                View.MeasureSpec.makeMeasureSpec(1080, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-        Log.d("[ Height ] ", String.valueOf(holder.tvComment.getMeasuredHeight()
-                + holder.tvDate.getMeasuredHeight()
-                + holder.tvNickname.getMeasuredHeight()));
     }
 
     @Override

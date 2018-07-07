@@ -4,44 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <!--
     <item android:title="Q&amp;A">
         <menu>
-            <item android:title="ALL" />
-            <item android:title="Tech Q&amp;A" />
-            <item android:title="Blockchain Q&amp;A" />
+            <item
+                android:id="@+id/qna_all"
+                android:title="ALL" />
+            <item
+                android:id="@+id/qna_tech"
+                android:title="Tech Q&amp;A" />
+            <item
+                android:id="@+id/qna_blockchain"
+                android:title="Blockchain Q&amp;A" />
         </menu>
     </item>
-
+    -->
     <item android:title="Tech">
         <menu>
-            <item android:title="IT News &amp; 정보" />
-            <item android:title="Tips &amp; 강좌" />
+            <item
+                android:id="@+id/tech_ALL"
+                android:title="ALL" />
+            <item
+                android:id="@+id/tech_news"
+                android:title="IT News &amp; 정보" />
+            <item
+                android:id="@+id/tech_tips"
+                android:title="Tips &amp; 강좌" />
         </menu>
     </item>
 
     <item android:title="커뮤니티">
         <menu>
-            <item android:title="ALL" />
-            <item android:title="공지사항" />
-            <item android:title="사는얘기" />
-            <item android:title="포럼" />
-            <item android:title="IT 행사" />
-            <item android:title="정기모임/스터디" />
-            <item android:title="학원/홍보" />
+            <item
+                android:id="@+id/community_all"
+                android:title="ALL" />
+            <item
+                android:id="@+id/community_notice"
+                android:title="공지사항" />
+            <item
+                android:id="@+id/community_life"
+                android:title="사는얘기" />
+            <item
+                android:id="@+id/community_forum"
+                android:title="포럼" />
+            <item
+                android:id="@+id/community_it_event"
+                android:title="IT 행사" />
+            <item
+                android:id="@+id/community_study"
+                android:title="정기모임/스터디" />
+            <item
+                android:id="@+id/community_edu"
+                android:title="학원/홍보" />
         </menu>
     </item>
 
     <item android:title="칼럼">
         <menu>
-            <item android:title="ALL" />
+            <item
+                android:id="@+id/column"
+                android:title="ALL" />
         </menu>
     </item>
 
     <item android:title="Jobs">
         <menu>
-            <item android:title="좋은회사/나쁜회사" />
-            <item android:title="구인" />
-            <item android:title="구직" />
+            <item
+                android:id="@+id/jobs_ALL"
+                android:title="ALL" />
+            <item
+                android:id="@+id/jobs_goodCompany"
+                android:title="좋은회사/나쁜회사" />
+            <item
+                android:id="@+id/jobs_opening"
+                android:title="구인" />
+            <item
+                android:id="@+id/jobs_jobHunt"
+                android:title="구직" />
         </menu>
     </item>
 

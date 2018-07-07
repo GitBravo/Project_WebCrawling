@@ -2,6 +2,8 @@ package kr.ac.kumoh.s20130053.okky;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,9 +35,13 @@ public class board extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
+    private NavigationView navigationView;
 
     // Back 버튼 연속눌림 시간측정 변수
     private long time = 0;
+    private String boardURL;
+    private String boardTitle;
+    private int boardPageCount;
 
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 유저 주소, 활동점수, 게시시간
     private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mId_Href, mActPoint, mDate;
@@ -44,6 +50,12 @@ public class board extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawerlayout);
+
+        // 시작페이지 & 게시판 제목 설정
+        boardTitle = "Tech";
+        boardURL = "https://okky.kr/articles/tech";
+        boardPageCount = 20;
+        getSupportActionBar().setTitle(boardTitle);
 
         // 최초 페이지 번호
         currentPage = 0;
@@ -73,7 +85,6 @@ public class board extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // 스크롤 최하단 도착 시 액션
-                Toast.makeText(board.this, "최하단!", Toast.LENGTH_SHORT).show();
                 new JsoupAsyncTask(board.this, false, currentPage++).execute();
                 mScrollListener.resetState();
             }
@@ -94,8 +105,8 @@ public class board extends AppCompatActivity {
                 intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글주소
                 intent.putExtra("mId", mId.get(position)); // 아이디
                 intent.putExtra("mDate", mDate.get(position)); // 게시날짜
-                intent.putExtra("mRecCount", mCount.get(3*position+1)); // 추천수
-                intent.putExtra("mHits", mCount.get(3*position+2)); // 조회수
+                intent.putExtra("mRecCount", mCount.get(3 * position + 1)); // 추천수
+                intent.putExtra("mHits", mCount.get(3 * position + 2)); // 조회수
                 startActivity(intent);
             }
 
@@ -104,6 +115,70 @@ public class board extends AppCompatActivity {
 
             }
         }));
+
+        // 네비게이션 뷰 초기화
+        navigationView = findViewById(R.id.navigationView);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.tech_ALL) {
+                    boardTitle = "Tech";
+                    boardURL = "https://okky.kr/articles/tech";
+                } else if (id == R.id.tech_news) {
+                    boardTitle = "IT News & 정보";
+                    boardURL = "https://okky.kr/articles/news";
+                } else if (id == R.id.tech_tips) {
+                    boardTitle = "Tips & 강좌";
+                    boardURL = "https://okky.kr/articles/tips";
+                } else if (id == R.id.community_all) {
+                    boardTitle = "커뮤니티";
+                    boardURL = "https://okky.kr/articles/community";
+                } else if (id == R.id.community_notice) {
+                    boardTitle = "공지사항";
+                    boardURL = "https://okky.kr/articles/notice";
+                    boardPageCount = 21;
+                } else if (id == R.id.community_life) {
+                    boardTitle = "사는얘기";
+                    boardURL = "https://okky.kr/articles/life";
+                } else if (id == R.id.community_forum) {
+                    boardTitle = "포럼";
+                    boardURL = "https://okky.kr/articles/forum";
+                }else if (id == R.id.community_it_event) {
+                    boardTitle = "IT 행사";
+                    boardURL = "https://okky.kr/articles/event";
+                }else if (id == R.id.community_study) {
+                    boardTitle = "정기모임/스터디";
+                    boardURL = "https://okky.kr/articles/gathering";
+                }else if (id == R.id.community_edu) {
+                    boardTitle = "학원/홍보";
+                    boardURL = "https://okky.kr/articles/promote";
+                }else if (id == R.id.column) {
+                    boardTitle = "칼럼";
+                    boardURL = "https://okky.kr/articles/columns";
+                }else if (id == R.id.jobs_ALL) {
+                    boardTitle = "Jobs";
+                    boardURL = "https://okky.kr/articles/jobs";
+                    boardPageCount = 23;
+                }else if (id == R.id.jobs_goodCompany) {
+                    boardTitle = "좋은회사/나쁜회사";
+                    boardURL = "https://okky.kr/articles/evalcom";
+                    boardPageCount = 23;
+                }else if (id == R.id.jobs_opening) {
+                    boardTitle = "구인";
+                    boardURL = "https://okky.kr/articles/recruit";
+                    boardPageCount = 24;
+                }else if (id == R.id.jobs_jobHunt) {
+                    boardTitle = "구직";
+                    boardURL = "https://okky.kr/articles/resumes";
+                    boardPageCount = 24;
+                }
+                new JsoupAsyncTask(board.this, true, 0).execute(); // 새 게시판 글 갱신
+                mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
+                mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
+                return false;
+            }
+        });
 
         // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
@@ -135,7 +210,7 @@ public class board extends AppCompatActivity {
         else if (System.currentTimeMillis() - time >= 2000) {
             // Back 버튼 연속 2회 눌러야 종료되도록 설정
             time = System.currentTimeMillis();
-            Toast.makeText(getApplicationContext(), "한번 더 누르면 종료합니다.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT).show();
         } else if (System.currentTimeMillis() - time < 2000)
             super.onBackPressed();
     }
@@ -154,16 +229,17 @@ public class board extends AppCompatActivity {
         JsoupAsyncTask(board context, boolean isRefresh, int page) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
+            board activity = mActivityReference.get();
             mPage = page;
 
             if (isRefresh) {
-                mActivityReference.get().mTitle.clear();
-                mActivityReference.get().mTitle_Href.clear();
-                mActivityReference.get().mCount.clear();
-                mActivityReference.get().mId.clear();
-                mActivityReference.get().mId_Href.clear();
-                mActivityReference.get().mActPoint.clear();
-                mActivityReference.get().mDate.clear();
+                activity.mTitle.clear();
+                activity.mTitle_Href.clear();
+                activity.mCount.clear();
+                activity.mId.clear();
+                activity.mId_Href.clear();
+                activity.mActPoint.clear();
+                activity.mDate.clear();
             }
         }
 
@@ -176,6 +252,7 @@ public class board extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             int boardCount;
+            board activity = mActivityReference.get();
             try {
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
@@ -187,17 +264,17 @@ public class board extends AppCompatActivity {
                  * 구성요소.html(); : 구성요소 값을 반환(태그도 포함)
                  * 구성요소.outerHtml(); : 구성요소를 반환(태그와 값 모두)
                  * */
-                Document doc = Jsoup.connect("https://okky.kr/articles/community?offset=" + (mPage * 20) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
+                Document doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * activity.boardPageCount) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
 
                 // 1. 게시글 제목 2. 게시글 주소
                 Elements title = doc.select("div.list-title-wrapper.clearfix " +
                         "h5.list-group-item-heading.list-group-item-evaluate a");
                 boardCount = 1;
                 for (Element link : title) {
-                    if (boardCount > 20)
+                    if (boardCount > activity.boardPageCount)
                         break;
-                    mActivityReference.get().mTitle.add(link.text().trim());
-                    mActivityReference.get().mTitle_Href.add(link.attr("abs:href"));
+                    activity.mTitle.add(link.text().trim());
+                    activity.mTitle_Href.add(link.attr("abs:href"));
                     boardCount++;
                 }
 
@@ -207,9 +284,9 @@ public class board extends AppCompatActivity {
                         "li");
                 boardCount = 1;
                 for (Element link : recCount) {
-                    if (boardCount > 60)
+                    if (boardCount > activity.boardPageCount*3)
                         break;
-                    mActivityReference.get().mCount.add(link.text().trim());
+                    activity.mCount.add(link.text().trim());
                     boardCount++;
                 }
 
@@ -217,10 +294,10 @@ public class board extends AppCompatActivity {
                 Elements account = doc.select("div.avatar-info a");
                 boardCount = 1;
                 for (Element link : account) {
-                    if (boardCount > 20)
+                    if (boardCount > activity.boardPageCount)
                         break;
-                    mActivityReference.get().mId.add(link.text().trim());
-                    mActivityReference.get().mId_Href.add(link.attr("abs:href"));
+                    activity.mId.add(link.text().trim());
+                    activity.mId_Href.add(link.attr("abs:href"));
                     boardCount++;
                 }
 
@@ -229,9 +306,9 @@ public class board extends AppCompatActivity {
                         "div.activity");
                 boardCount = 1;
                 for (Element link : actPoint) {
-                    if (boardCount > 20)
+                    if (boardCount > activity.boardPageCount)
                         break;
-                    mActivityReference.get().mActPoint.add(link.text().trim());
+                    activity.mActPoint.add(link.text().trim());
                     boardCount++;
                 }
 
@@ -241,9 +318,9 @@ public class board extends AppCompatActivity {
                         "span.timeago");
                 boardCount = 1;
                 for (Element link : date) {
-                    if (boardCount > 20)
+                    if (boardCount > activity.boardPageCount)
                         break;
-                    mActivityReference.get().mDate.add(link.text().trim());
+                    activity.mDate.add(link.text().trim());
                     boardCount++;
                 }
 
@@ -256,12 +333,10 @@ public class board extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
-
-            // 각 게시글 데이터 출력
-            mActivityReference.get().mAdapter.notifyDataSetChanged();
-
-            // 리프레쉬 아이콘 제거
-            mActivityReference.get().mSwipeRefreshLayout.setRefreshing(false);
+            board activity = mActivityReference.get(); // Activity 객체 획득
+            activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
+            activity.getSupportActionBar().setTitle(activity.boardTitle); // 게시판 제목 재설정
+            activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
         }
     }
 }

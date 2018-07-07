@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.util.Log;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -124,7 +126,8 @@ public class detail extends AppCompatActivity {
                 // 덧글 게시자 파싱
                 Elements comment_nick = doc.select("div.content-body.panel-body.pull-left " +
                         "div.avatar.avatar-medium.clearfix " +
-                        "div.avatar-info a");
+                        "div.avatar-info " +
+                        "a.nickname");
                 for (Element link : comment_nick) {
                     mActivityReference.get().commentNickname.add(link.text());
                 }
@@ -133,8 +136,7 @@ public class detail extends AppCompatActivity {
                 Elements comment_date = doc.select("div.content-body.panel-body.pull-left " +
                         "div.avatar.avatar-medium.clearfix " +
                         "div.avatar-info " +
-                        "div.date-created " +
-                        "span.timeago");
+                        "div.date-created");
                 for (Element link : comment_date) {
                     mActivityReference.get().commentDate.add(link.text());
                 }
@@ -142,7 +144,7 @@ public class detail extends AppCompatActivity {
                 // 덧글 내용 파싱
                 Elements comment = doc.select("article.list-group-item-text.note-text");
                 for (Element link : comment) {
-                    mActivityReference.get().commentContent.add(link.text());
+                    mActivityReference.get().commentContent.add(endBlankRemover(String.valueOf(Html.fromHtml(link.html()))));
                 }
 
             } catch (IOException e) {
@@ -156,23 +158,15 @@ public class detail extends AppCompatActivity {
             // 백그라운드 작업 진행 후 실행될 작업
 
             // 게시물 내용 View 에 출력
-            mActivityReference.get().mContent.setText(htmlToString(content));
+            mActivityReference.get().mContent.setText(endBlankRemover(String.valueOf(Html.fromHtml(content))));
 
             // 각 덧글 데이터 출력
             mActivityReference.get().mAdapter.notifyDataSetChanged();
         }
-    }
 
-    public static String htmlToString(String input) {
-        input = input.replaceAll("\n", "");
-        input = input.replaceAll("<p>", "");
-        input = input.replaceAll("</p>", "\n");
-        input = input.replaceAll("<div>", "");
-        input = input.replaceAll("</div>", "\n");
-        input = input.replaceAll("&nbsp;", "");
-        input = input.replaceAll("<br>", "");
-        input = input.replaceAll("<span style=\"color:rgb\\( 51 , 51 , 51 \\)\">", "");
-        input = input.replaceAll("</span>", "");
-        return input;//
+        String endBlankRemover(String input){
+            // 문자열 끝 부분의 공백을 지워주는 메소드
+            return input.substring(0, input.length()-2);
+        }
     }
 }
