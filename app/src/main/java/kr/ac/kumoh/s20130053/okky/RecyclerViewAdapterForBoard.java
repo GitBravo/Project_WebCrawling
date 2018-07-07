@@ -10,14 +10,14 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerViewAdapterForBoard.ViewHolder> {
     private Context mContext;
     private ArrayList<String> mArray;
     private ArrayList<String> mComCount;
     private ArrayList<String> mDate;
     private ArrayList<String> mId;
 
-    RecyclerViewAdapter(Context context, ArrayList<String> title, ArrayList<String> comCount, ArrayList<String> date, ArrayList<String> id) {
+    RecyclerViewAdapterForBoard(Context context, ArrayList<String> title, ArrayList<String> comCount, ArrayList<String> date, ArrayList<String> id) {
         this.mContext = context;
         this.mArray = title;
         this.mComCount = comCount;
@@ -29,7 +29,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 새로운 뷰 생성
-        View view = LayoutInflater.from(mContext).inflate(R.layout.recyclerview_itme, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.recyclerview_item_for_board, parent, false);
         return new ViewHolder(view);
     }
 

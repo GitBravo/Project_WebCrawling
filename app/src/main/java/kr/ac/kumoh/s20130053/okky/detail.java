@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -16,8 +18,16 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class detail extends AppCompatActivity {
-    private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits;
-    private TextView mContent;
+    private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits; // board 에서 받아오는 데이터
+
+    private TextView mContent; // 글 내용
+    private ArrayList<String> commentNickname; // 덧글 게시자
+    private ArrayList<String> commentDate; // 덧글 게시날짜
+    private ArrayList<String> commentContent; // 덧글 내용
+
+    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerViewAdapterForDetail mAdapter;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,20 +43,38 @@ public class detail extends AppCompatActivity {
         mRecCount = intent.getStringExtra("mRecCount");
         mHits = intent.getStringExtra("mHits");
 
-        TextView tv = findViewById(R.id.detail_id);
-        tv.setText(mId);
-        tv = findViewById(R.id.detail_date);
-        tv.setText(mDate + "ㆍ" + mRecCount + "ㆍ" + mHits);
-
-        mContent = findViewById(R.id.detail_content);
-
         // SupportActionBar 의 제목을 게시글 제목으로 변경
         getSupportActionBar().setTitle(mTitle);
+
+        // 게시물 메타정보(게시자, 게시날짜)를 담기위한 TextView 선언 및 출력
+        TextView tv = findViewById(R.id.detail_id);
+        tv.setText(mId); // 게시자 닉네임
+        tv = findViewById(R.id.detail_date);
+        tv.setText(mDate + "ㆍ" + mRecCount + "ㆍ" + mHits); // 게시 날짜
+
+        // 게시글 내용을 출력하기 위한 View
+        mContent = findViewById(R.id.detail_content);
+
+        // 덧글 내용을 담기위한 객체 선언
+        commentContent = new ArrayList<>();
+        commentNickname = new ArrayList<>();
+        commentDate = new ArrayList<>();
+
+        // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
+        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mAdapter = new RecyclerViewAdapterForDetail(this, commentNickname, commentDate, commentContent);
+
+        // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
+        mRecyclerView = findViewById(R.id.detail_recyclerView);
+        mRecyclerView.setHasFixedSize(true); // 고정 크기 설정시 RecyclerView 의 성능을 개선할 수 있음
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
 
         // 게시글 내용 및 덧글 로드
         new JsoupAsyncTask(this).execute();
 
     }
+
 
     private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
         /* Activity 클래스 하위에 존재하는 Non-static 내부 클래스는 Activity 클래스 보다
@@ -58,12 +86,10 @@ public class detail extends AppCompatActivity {
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
         private WeakReference<detail> mActivityReference;
         private String content; // 게시글 내용
-        private ArrayList<String> comm;
 
         JsoupAsyncTask(detail context) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
-            comm = new ArrayList<>();
         }
 
         @Override
@@ -80,25 +106,45 @@ public class detail extends AppCompatActivity {
                  * div#id : 아이디명 id 만 가져오기
                  * div.className a : 클래스명 항목 중 a 태그만 가져오기
                  * input[name=btnK] : input 태그의 name 속성값이 btnK 인것을 가져오기
+                 *
+                 * 구성요소.text(); : 구성요소 값을 반환(태그는 포함하지 않음)
+                 * 구성요소.attr("속성이름"); : 구성요소 "속성이름"에 대한 값을 반환
+                 * 구성요소.html(); : 구성요소 값을 반환(태그도 포함)
+                 * 구성요소.outerHtml(); : 구성요소를 반환(태그와 값 모두)
                  * */
+
                 Document doc = Jsoup.connect(mActivityReference.get().mTitle_Href).get(); // 타겟 페이지 URL
 
                 // 게시글 내용 파싱
-                Elements title = doc.select("article.content-text p");
+                Elements title = doc.select("article.content-text");
                 for (Element link : title) {
-                    content += link.text();
-                    content += "\n\n";
-//                    mActivityReference.get().mTitle.add(link.text().trim());
-//                    mActivityReference.get().mTitle_Href.add(link.attr("abs:href"));
+                    content += link.html();
+                }
+
+                // 덧글 게시자 파싱
+                Elements comment_nick = doc.select("div.content-body.panel-body.pull-left " +
+                        "div.avatar.avatar-medium.clearfix " +
+                        "div.avatar-info a");
+                for (Element link : comment_nick) {
+                    mActivityReference.get().commentNickname.add(link.text());
+                }
+
+                // 덧글 게시날짜 파싱
+                Elements comment_date = doc.select("div.content-body.panel-body.pull-left " +
+                        "div.avatar.avatar-medium.clearfix " +
+                        "div.avatar-info " +
+                        "div.date-created " +
+                        "span.timeago");
+                for (Element link : comment_date) {
+                    mActivityReference.get().commentDate.add(link.text());
                 }
 
                 // 덧글 내용 파싱
-//                Elements comment = doc.select("article.list-group-item-text.note-text p");
-//                for (Element link : comment) {
-//                    comm.add(link.text());
-//                    content += link.text();
-//                    content += "\n\n";
-//                }
+                Elements comment = doc.select("article.list-group-item-text.note-text");
+                for (Element link : comment) {
+                    mActivityReference.get().commentContent.add(link.text());
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,13 +155,24 @@ public class detail extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
 
-            mActivityReference.get().mContent.setText(content);
+            // 게시물 내용 View 에 출력
+            mActivityReference.get().mContent.setText(htmlToString(content));
 
-//            // 로컬 데이터 변경
-//            mActivityReference.get().mAdapter.notifyDataSetChanged();
-//
-//            // 리프레쉬 아이콘 제거
-//            mActivityReference.get().mSwipeRefreshLayout.setRefreshing(false);
+            // 각 덧글 데이터 출력
+            mActivityReference.get().mAdapter.notifyDataSetChanged();
         }
+    }
+
+    public static String htmlToString(String input) {
+        input = input.replaceAll("\n", "");
+        input = input.replaceAll("<p>", "");
+        input = input.replaceAll("</p>", "\n");
+        input = input.replaceAll("<div>", "");
+        input = input.replaceAll("</div>", "\n");
+        input = input.replaceAll("&nbsp;", "");
+        input = input.replaceAll("<br>", "");
+        input = input.replaceAll("<span style=\"color:rgb\\( 51 , 51 , 51 \\)\">", "");
+        input = input.replaceAll("</span>", "");
+        return input;//
     }
 }

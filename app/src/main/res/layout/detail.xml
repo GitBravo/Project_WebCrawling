@@ -1,53 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".detail">
-
+    android:layout_height="match_parent">
     <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="6dp">
+        tools:context=".detail">
 
-        <TextView
-            android:id="@+id/detail_id"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="6dp">
 
-        <TextView
-            android:id="@+id/detail_date"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/detail_id"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/detail_date"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:layout_height="wrap_content"/>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
+        </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        <View
+            android:id="@+id/top_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider" />
+
         <TextView
             android:id="@+id/detail_content"
             android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_margin="10dp"
             android:textColor="#000"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-    </ScrollView>
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/detail_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- android:nestedScrollingEnabled="false" : 뷰 계층구조 내에 스크롤뷰가 있을 때도 스크롤 활성화 -->
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

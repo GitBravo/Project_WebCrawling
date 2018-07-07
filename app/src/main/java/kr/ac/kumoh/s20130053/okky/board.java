@@ -25,7 +25,7 @@ import java.util.ArrayList;
 
 public class board extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerViewAdapter mAdapter;
+    private RecyclerViewAdapterForBoard mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerViewEndlessScrollListener mScrollListener;
     private RecyclerView mRecyclerView;
@@ -64,9 +64,9 @@ public class board extends AppCompatActivity {
         mActPoint = new ArrayList<>();
         mDate = new ArrayList<>();
 
-        // 어레이리스트, 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
+        // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
         mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new RecyclerViewAdapter(this, mTitle, mCount, mDate, mId);
+        mAdapter = new RecyclerViewAdapterForBoard(this, mTitle, mCount, mDate, mId);
 
         // 스크롤 리스너 객체 생성 후 스크롤 리스너 등록
         mScrollListener = new RecyclerViewEndlessScrollListener(mLinearLayoutManager) {
@@ -181,6 +181,11 @@ public class board extends AppCompatActivity {
                  * div#id : 아이디명 id 만 가져오기
                  * div.className a : 클래스명 항목 중 a 태그만 가져오기
                  * input[name=btnK] : input 태그의 name 속성값이 btnK 인것을 가져오기
+                 *
+                 * 구성요소.text(); : 구성요소 값을 반환(태그는 포함하지 않음)
+                 * 구성요소.attr("속성이름"); : 구성요소 "속성이름"에 대한 값을 반환
+                 * 구성요소.html(); : 구성요소 값을 반환(태그도 포함)
+                 * 구성요소.outerHtml(); : 구성요소를 반환(태그와 값 모두)
                  * */
                 Document doc = Jsoup.connect("https://okky.kr/articles/community?offset=" + (mPage * 20) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
 
@@ -252,7 +257,7 @@ public class board extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
 
-            // 로컬 데이터 변경
+            // 각 게시글 데이터 출력
             mActivityReference.get().mAdapter.notifyDataSetChanged();
 
             // 리프레쉬 아이콘 제거
