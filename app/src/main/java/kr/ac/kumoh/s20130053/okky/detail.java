@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,10 +34,19 @@ public class detail extends AppCompatActivity {
     private RecyclerViewAdapterForDetail mAdapter;
     private RecyclerView mRecyclerView;
 
+    private AdView mAdView; // 광고 객체
+    private static String APP_ID = "ca-app-pub-1701862199489144~5554907767";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail);
+
+        // 광고 객체 초기화
+        MobileAds.initialize(this, APP_ID);
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         // board 액티비티로부터 현재 게시글 데이터 수신
         Intent intent = getIntent();
@@ -45,11 +57,12 @@ public class detail extends AppCompatActivity {
         mRecCount = intent.getStringExtra("mRecCount");
         mHits = intent.getStringExtra("mHits");
 
-        // SupportActionBar 의 제목을 게시글 제목으로 변경
-        getSupportActionBar().setTitle(mTitle);
+        // 게시물 제목 설정
+        TextView tv = findViewById(R.id.detail_title);
+        tv.setText(mTitle);
 
-        // 게시물 메타정보(게시자, 게시날짜)를 담기위한 TextView 선언 및 출력
-        TextView tv = findViewById(R.id.detail_id);
+        // 메타정보(게시자, 게시날짜)를 담기위한 TextView 선언 및 출력
+        tv = findViewById(R.id.detail_id);
         tv.setText(mId); // 게시자 닉네임
         tv = findViewById(R.id.detail_date);
         tv.setText(mDate + "ㆍ" + mRecCount + "ㆍ" + mHits); // 게시 날짜
@@ -102,6 +115,7 @@ public class detail extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            detail activity = mActivityReference.get();
             content = "";
             try {
                 /* div.className : 클래스명 className 만 가져오기
@@ -115,7 +129,7 @@ public class detail extends AppCompatActivity {
                  * 구성요소.outerHtml(); : 구성요소를 반환(태그와 값 모두)
                  * */
 
-                Document doc = Jsoup.connect(mActivityReference.get().mTitle_Href).get(); // 타겟 페이지 URL
+                Document doc = Jsoup.connect(activity.mTitle_Href).get(); // 타겟 페이지 URL
 
                 // 게시글 내용 파싱
                 Elements title = doc.select("article.content-text");
@@ -129,7 +143,7 @@ public class detail extends AppCompatActivity {
                         "div.avatar-info " +
                         "a.nickname");
                 for (Element link : comment_nick) {
-                    mActivityReference.get().commentNickname.add(link.text());
+                    activity.commentNickname.add(link.text());
                 }
 
                 // 덧글 게시날짜 파싱
@@ -138,13 +152,13 @@ public class detail extends AppCompatActivity {
                         "div.avatar-info " +
                         "div.date-created");
                 for (Element link : comment_date) {
-                    mActivityReference.get().commentDate.add(link.text());
+                    activity.commentDate.add(link.text());
                 }
 
                 // 덧글 내용 파싱
                 Elements comment = doc.select("article.list-group-item-text.note-text");
                 for (Element link : comment) {
-                    mActivityReference.get().commentContent.add(endBlankRemover(String.valueOf(Html.fromHtml(link.html()))));
+                    activity.commentContent.add(endBlankRemover(String.valueOf(Html.fromHtml(link.html()))));
                 }
 
             } catch (IOException e) {
@@ -156,12 +170,9 @@ public class detail extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
-
-            // 게시물 내용 View 에 출력
-            mActivityReference.get().mContent.setText(endBlankRemover(String.valueOf(Html.fromHtml(content))));
-
-            // 각 덧글 데이터 출력
-            mActivityReference.get().mAdapter.notifyDataSetChanged();
+            detail activity = mActivityReference.get(); // Activity 객체 획득
+            activity.mContent.setText(endBlankRemover(String.valueOf(Html.fromHtml(content)))); // 게시물 내용 View 에 출력
+            activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
 
         String endBlankRemover(String input){

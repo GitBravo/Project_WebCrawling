@@ -34,9 +34,9 @@ public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapterForDetail.ViewHolder holder, int position) {
-        holder.tvNickname.setText(mNickname.get(position)); // 덧글 아이디
-        holder.tvDate.setText(mDate.get(position)); // 덧글 게시날짜
-        holder.tvComment.setText(mComment.get(position)); // 덧글 내용
+            holder.tvNickname.setText(mNickname.get(position)); // 덧글 아이디
+            holder.tvDate.setText(mDate.get(position)); // 덧글 게시날짜
+            holder.tvComment.setText(mComment.get(position)); // 덧글 내용
     }
 
     @Override

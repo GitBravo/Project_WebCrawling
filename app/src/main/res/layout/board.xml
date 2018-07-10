@@ -8,13 +8,26 @@
     android:orientation="vertical"
     tools:context=".board">
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/BoardTheme">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolBar_board"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>

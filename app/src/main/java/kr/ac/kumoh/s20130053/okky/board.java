@@ -51,14 +51,15 @@ public class board extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawerlayout);
 
-        // 시작페이지 & 게시판 제목 설정
+        // 시작페이지 & 게시판 제목 & 최초 페이지 번호 설정
         boardTitle = "Tech";
         boardURL = "https://okky.kr/articles/tech";
         boardPageCount = 20;
-        getSupportActionBar().setTitle(boardTitle);
-
-        // 최초 페이지 번호
         currentPage = 0;
+
+        // ActionBar 대신 ToolBar 적용하였음
+        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolBar_board));
+        getSupportActionBar().setTitle(boardTitle);
 
         // 드로워레이아웃 및 토글버튼 초기화 코드
         mDrawerLayout = findViewById(R.id.drawerLayout);
@@ -66,6 +67,7 @@ public class board extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         // 각 게시글에 대한 정보를 저장하는 변수 9개 객체 할당
         mTitle = new ArrayList<>();
@@ -86,7 +88,6 @@ public class board extends AppCompatActivity {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // 스크롤 최하단 도착 시 액션
                 new JsoupAsyncTask(board.this, false, currentPage++).execute();
-                mScrollListener.resetState();
             }
         };
 
@@ -144,31 +145,31 @@ public class board extends AppCompatActivity {
                 } else if (id == R.id.community_forum) {
                     boardTitle = "포럼";
                     boardURL = "https://okky.kr/articles/forum";
-                }else if (id == R.id.community_it_event) {
+                } else if (id == R.id.community_it_event) {
                     boardTitle = "IT 행사";
                     boardURL = "https://okky.kr/articles/event";
-                }else if (id == R.id.community_study) {
+                } else if (id == R.id.community_study) {
                     boardTitle = "정기모임/스터디";
                     boardURL = "https://okky.kr/articles/gathering";
-                }else if (id == R.id.community_edu) {
+                } else if (id == R.id.community_edu) {
                     boardTitle = "학원/홍보";
                     boardURL = "https://okky.kr/articles/promote";
-                }else if (id == R.id.column) {
+                } else if (id == R.id.column) {
                     boardTitle = "칼럼";
                     boardURL = "https://okky.kr/articles/columns";
-                }else if (id == R.id.jobs_ALL) {
+                } else if (id == R.id.jobs_ALL) {
                     boardTitle = "Jobs";
                     boardURL = "https://okky.kr/articles/jobs";
                     boardPageCount = 23;
-                }else if (id == R.id.jobs_goodCompany) {
+                } else if (id == R.id.jobs_goodCompany) {
                     boardTitle = "좋은회사/나쁜회사";
                     boardURL = "https://okky.kr/articles/evalcom";
                     boardPageCount = 23;
-                }else if (id == R.id.jobs_opening) {
+                } else if (id == R.id.jobs_opening) {
                     boardTitle = "구인";
                     boardURL = "https://okky.kr/articles/recruit";
                     boardPageCount = 24;
-                }else if (id == R.id.jobs_jobHunt) {
+                } else if (id == R.id.jobs_jobHunt) {
                     boardTitle = "구직";
                     boardURL = "https://okky.kr/articles/resumes";
                     boardPageCount = 24;
@@ -284,7 +285,7 @@ public class board extends AppCompatActivity {
                         "li");
                 boardCount = 1;
                 for (Element link : recCount) {
-                    if (boardCount > activity.boardPageCount*3)
+                    if (boardCount > activity.boardPageCount * 3)
                         break;
                     activity.mCount.add(link.text().trim());
                     boardCount++;
@@ -337,6 +338,7 @@ public class board extends AppCompatActivity {
             activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
             activity.getSupportActionBar().setTitle(activity.boardTitle); // 게시판 제목 재설정
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
+            activity.mScrollListener.resetState();
         }
     }
 }
