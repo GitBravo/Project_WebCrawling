@@ -47,6 +47,8 @@ public abstract class RecyclerViewEndlessScrollListener extends RecyclerView.OnS
         return maxSize;
     }
 
+
+
     // This happens many times a second during a scroll, so be wary of the code you place here.
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
@@ -86,7 +88,7 @@ public abstract class RecyclerViewEndlessScrollListener extends RecyclerView.OnS
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount - 15) { // 남은 글 개수가 15개 미만일때 추가로딩
             currentPage++;
             onLoadMore(currentPage, totalItemCount, view);
             loading = true;

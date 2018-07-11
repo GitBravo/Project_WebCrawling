@@ -43,21 +43,21 @@ public class board extends AppCompatActivity {
     private String boardTitle;
     private int boardPageCount;
 
-    // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 유저 주소, 활동점수, 게시시간
-    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mId_Href, mActPoint, mDate;
+    // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 활동점수, 게시시간
+    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mActPoint, mDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawerlayout);
 
-        // 시작페이지 & 게시판 제목 & 최초 페이지 번호 설정
-        boardTitle = "Tech";
-        boardURL = "https://okky.kr/articles/tech";
-        boardPageCount = 20;
-        currentPage = 0;
+        // 초기 설정
+        boardTitle = "Tech"; // 기본 게시판 제목
+        boardURL = "https://okky.kr/articles/tech"; // 기본 게시판 URL
+        boardPageCount = 20; // 기본 게시판 글 개수
+        currentPage = 0; // 기본 게시판 페이지 번호
 
-        // ActionBar 대신 ToolBar 적용하였음
+        // ActionBar 대신 ToolBar 적용
         setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolBar_board));
         getSupportActionBar().setTitle(boardTitle);
 
@@ -69,12 +69,11 @@ public class board extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        // 각 게시글에 대한 정보를 저장하는 변수 9개 객체 할당
+        // 각 게시글에 대한 정보를 저장하는 변수 6개 객체 할당
         mTitle = new ArrayList<>();
         mTitle_Href = new ArrayList<>();
         mCount = new ArrayList<>();
         mId = new ArrayList<>();
-        mId_Href = new ArrayList<>();
         mActPoint = new ArrayList<>();
         mDate = new ArrayList<>();
 
@@ -87,7 +86,7 @@ public class board extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // 스크롤 최하단 도착 시 액션
-                new JsoupAsyncTask(board.this, false, currentPage++).execute();
+                new JsoupAsyncTask(board.this, currentPage++).execute();
             }
         };
 
@@ -138,7 +137,6 @@ public class board extends AppCompatActivity {
                 } else if (id == R.id.community_notice) {
                     boardTitle = "공지사항";
                     boardURL = "https://okky.kr/articles/notice";
-                    boardPageCount = 21;
                 } else if (id == R.id.community_life) {
                     boardTitle = "사는얘기";
                     boardURL = "https://okky.kr/articles/life";
@@ -160,21 +158,18 @@ public class board extends AppCompatActivity {
                 } else if (id == R.id.jobs_ALL) {
                     boardTitle = "Jobs";
                     boardURL = "https://okky.kr/articles/jobs";
-                    boardPageCount = 23;
                 } else if (id == R.id.jobs_goodCompany) {
                     boardTitle = "좋은회사/나쁜회사";
                     boardURL = "https://okky.kr/articles/evalcom";
-                    boardPageCount = 23;
                 } else if (id == R.id.jobs_opening) {
                     boardTitle = "구인";
                     boardURL = "https://okky.kr/articles/recruit";
-                    boardPageCount = 24;
                 } else if (id == R.id.jobs_jobHunt) {
                     boardTitle = "구직";
                     boardURL = "https://okky.kr/articles/resumes";
-                    boardPageCount = 24;
                 }
-                new JsoupAsyncTask(board.this, true, 0).execute(); // 새 게시판 글 갱신
+                setLocalDataRemove();
+                new JsoupAsyncTask(board.this, 0).execute(); // 새 게시판 글 갱신
                 mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
                 mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
                 return false;
@@ -186,13 +181,14 @@ public class board extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new JsoupAsyncTask(board.this, true, 0).execute();
+                setLocalDataRemove();
+                new JsoupAsyncTask(board.this, 0).execute();
                 currentPage = 1;
             }
         });
 
         // 최초 실행시 게시글 불러오기
-        new JsoupAsyncTask(board.this, true, currentPage++).execute();
+        new JsoupAsyncTask(board.this, currentPage++).execute();
     }
 
     @Override
@@ -216,6 +212,16 @@ public class board extends AppCompatActivity {
             super.onBackPressed();
     }
 
+    public void setLocalDataRemove(){
+        mTitle.clear();
+        mTitle_Href.clear();
+        mCount.clear();
+        mId.clear();
+        mActPoint.clear();
+        mDate.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
     private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
         /* Activity 클래스 하위에 존재하는 Non-static 내부 클래스는 Activity 클래스 보다
         오래 가지고 살아있기 때문에 GC 이 되지 않는다. 따라서 이러한 문제 때문에 메모리 누수가
@@ -227,21 +233,10 @@ public class board extends AppCompatActivity {
         private WeakReference<board> mActivityReference;
         private int mPage;
 
-        JsoupAsyncTask(board context, boolean isRefresh, int page) {
+        JsoupAsyncTask(board context, int page) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
-            board activity = mActivityReference.get();
             mPage = page;
-
-            if (isRefresh) {
-                activity.mTitle.clear();
-                activity.mTitle_Href.clear();
-                activity.mCount.clear();
-                activity.mId.clear();
-                activity.mId_Href.clear();
-                activity.mActPoint.clear();
-                activity.mDate.clear();
-            }
         }
 
         @Override
@@ -292,13 +287,13 @@ public class board extends AppCompatActivity {
                 }
 
                 // 게시글 아이디, 유저정보주소
-                Elements account = doc.select("div.avatar-info a");
+                Elements account = doc.select("div.avatar-info " +
+                        ".nickname");
                 boardCount = 1;
                 for (Element link : account) {
                     if (boardCount > activity.boardPageCount)
                         break;
                     activity.mId.add(link.text().trim());
-                    activity.mId_Href.add(link.attr("abs:href"));
                     boardCount++;
                 }
 

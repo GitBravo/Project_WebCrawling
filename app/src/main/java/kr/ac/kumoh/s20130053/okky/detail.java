@@ -141,7 +141,7 @@ public class detail extends AppCompatActivity {
                 Elements comment_nick = doc.select("div.content-body.panel-body.pull-left " +
                         "div.avatar.avatar-medium.clearfix " +
                         "div.avatar-info " +
-                        "a.nickname");
+                        ".nickname");
                 for (Element link : comment_nick) {
                     activity.commentNickname.add(link.text());
                 }
