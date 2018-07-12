@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "216058468585",
+    "firebase_url": "https://okky-9a186.firebaseio.com",
+    "project_id": "okky-9a186",
+    "storage_bucket": "okky-9a186.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216058468585:android:618166c784295fd0",
+        "android_client_info": {
+          "package_name": "kr.ac.kumoh.s20130053.okky"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216058468585-br8u3dpijf9p41e41725mhof5e6p0695.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8DfFj7702_A159d_klWjBO0BX3wt-Rg4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
