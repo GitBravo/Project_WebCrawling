@@ -259,12 +259,18 @@ public class board extends AppCompatActivity {
                  * 구성요소.attr("속성이름"); : 구성요소 "속성이름"에 대한 값을 반환
                  * 구성요소.html(); : 구성요소 값을 반환(태그도 포함)
                  * 구성요소.outerHtml(); : 구성요소를 반환(태그와 값 모두)
+                 *
+                 * 띄어쓰기로 각 태그를 구분하면 하위에 있는 해당 이름의 태그를 모두 가져온다.
+                 * 하지만 > 로 구분하면 해당 계층구조에 있는 태그만 가져온다.
                  * */
                 Document doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * activity.boardPageCount) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
 
                 // 1. 게시글 제목 2. 게시글 주소
-                Elements title = doc.select("div.list-title-wrapper.clearfix " +
-                        "h5.list-group-item-heading.list-group-item-evaluate a");
+                Elements title = doc.select("#list-article > " +
+                        ".panel.panel-default " +
+                        ".list-group " +
+                        ".list-title-wrapper.clearfix " +
+                        ".list-group-item-heading.list-group-item-evaluate a");
                 boardCount = 1;
                 for (Element link : title) {
                     if (boardCount > activity.boardPageCount)
