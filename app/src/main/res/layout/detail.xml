@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scrollbars="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
@@ -39,7 +40,7 @@
             <TextView
                 android:id="@+id/detail_date"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="end"
                 android:layout_height="wrap_content"/>
 
@@ -70,6 +71,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/detail_recyclerView"
+            android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <!-- android:nestedScrollingEnabled="false" : 뷰 계층구조 내에 스크롤뷰가 있을 때도 스크롤 활성화 -->
