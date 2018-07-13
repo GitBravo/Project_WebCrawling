@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.MobileAds;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -50,6 +52,9 @@ public class board extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawerlayout);
+
+        // 광고 객체 초기화
+        MobileAds.initialize(this, "ca-app-pub-1701862199489144~5554907767");
 
         // 초기 설정
         boardTitle = "Tech"; // 기본 게시판 제목

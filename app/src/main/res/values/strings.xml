@@ -2,5 +2,7 @@
     <string name="app_name">OKKY</string>
     <string name="DrawerOpen">DrawerOpen</string>
     <string name="DrawerClose">DrawerClose</string>
-    <string name="banner_id">ca-app-pub-1701862199489144/1725158176</string>
+    <string name="banner_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- TEST UNIT_ID : ca-app-pub-3940256099942544/6300978111-->
+    <!-- MY UNIT_ID : ca-app-pub-1701862199489144/1725158176-->
 </resources>

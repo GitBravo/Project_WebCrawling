@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -34,8 +33,7 @@ public class detail extends AppCompatActivity {
     private RecyclerViewAdapterForDetail mAdapter;
     private RecyclerView mRecyclerView;
 
-    private AdView mAdView; // 광고 객체
-    private static String APP_ID = "ca-app-pub-1701862199489144~5554907767";
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +41,6 @@ public class detail extends AppCompatActivity {
         setContentView(R.layout.detail);
 
         // 광고 객체 초기화
-        MobileAds.initialize(this, APP_ID);
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
