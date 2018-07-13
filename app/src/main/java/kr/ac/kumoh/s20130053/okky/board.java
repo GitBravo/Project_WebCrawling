@@ -286,7 +286,10 @@ public class board extends AppCompatActivity {
                 }
 
                 // 게시글 덧글수, 추천수, 조회수. 게시글당 3개씩 나옴
-                Elements recCount = doc.select("div.list-group-item-summary.clearfix " +
+                Elements recCount = doc.select("#list-article > " +
+                        ".panel.panel-default " +
+                        ".list-group " +
+                        ".list-group-item-summary.clearfix " +
                         "ul " +
                         "li");
                 boardCount = 1;
@@ -298,7 +301,10 @@ public class board extends AppCompatActivity {
                 }
 
                 // 게시글 아이디, 유저정보주소
-                Elements account = doc.select("div.avatar-info " +
+                Elements account = doc.select("#list-article > " +
+                        ".panel.panel-default " +
+                        ".list-group " +
+                        ".avatar-info " +
                         ".nickname");
                 boardCount = 1;
                 for (Element link : account) {
@@ -309,8 +315,11 @@ public class board extends AppCompatActivity {
                 }
 
                 // 활동점수
-                Elements actPoint = doc.select("div.avatar-info " +
-                        "div.activity");
+                Elements actPoint = doc.select("#list-article > " +
+                        ".panel.panel-default " +
+                        ".list-group " +
+                        ".avatar-info " +
+                        ".activity");
                 boardCount = 1;
                 for (Element link : actPoint) {
                     if (boardCount > activity.boardPageCount)
@@ -320,8 +329,11 @@ public class board extends AppCompatActivity {
                 }
 
                 // 게시시간
-                Elements date = doc.select("div.avatar-info " +
-                        "div.date-created " +
+                Elements date = doc.select("#list-article > " +
+                        ".panel.panel-default " +
+                        ".list-group " +
+                        ".avatar-info " +
+                        ".date-created " +
                         "span.timeago");
                 boardCount = 1;
                 for (Element link : date) {
