@@ -173,8 +173,11 @@ public class detail extends AppCompatActivity {
         }
 
         String endBlankRemover(String input){
-            // 문자열 끝 부분의 공백을 지워주는 메소드
-            return input.substring(0, input.length()-2);
+            // 문자열 끝 부분의 공백 2개를 지워주는 메소드
+            if(input.length() > 2)
+                return input.substring(0, input.length()-2);
+            else
+                return input;
         }
     }
 }
