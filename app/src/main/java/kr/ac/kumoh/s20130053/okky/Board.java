@@ -56,7 +56,7 @@ public class Board extends AppCompatActivity {
         setContentView(R.layout.drawerlayout);
 
         // 광고 객체 초기화
-        MobileAds.initialize(this, "ca-app-pub-1701862199489144~5554907767");
+        MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
 
         // 초기 설정
         boardTitle = "Tech"; // 기본 게시판 제목

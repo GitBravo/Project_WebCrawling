@@ -22,9 +22,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.google.firebase:firebase-ads:15.0.1'
 
     compile 'org.jsoup:jsoup:1.11.3'
     compile 'com.android.support:recyclerview-v7:27.1.1'
     compile 'com.android.support:design:27.1.1'
 }
+
+apply plugin: 'com.google.gms.google-services'
