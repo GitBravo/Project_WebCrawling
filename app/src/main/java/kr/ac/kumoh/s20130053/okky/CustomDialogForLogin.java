@@ -35,6 +35,6 @@ public class CustomDialogForLogin extends Dialog implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(mContext, "하앍", Toast.LENGTH_SHORT).show();
+
     }
 }

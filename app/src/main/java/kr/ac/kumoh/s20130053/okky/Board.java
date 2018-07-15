@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -188,7 +189,9 @@ public class Board extends AppCompatActivity {
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new CustomDialogForLogin(Board.this).show();
+                CustomDialogForLogin dialog = new CustomDialogForLogin(Board.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
             }
         });
 

@@ -4,6 +4,8 @@
     <string name="DrawerClose">DrawerClose</string>
     <string name="Login">로그인</string>
     <string name="SignIn">회원가입</string>
+    <string name="ID">아이디</string>
+    <string name="PW">비밀번호</string>
     <string name="ID_Hint">아이디를 입력하세요</string>
     <string name="PW_Hint">비밀번호를 입력하세요</string>
 
