@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/Login"
+        android:enabled="false"
         android:theme="@style/MaterialButton_1"/>
 
     <Button
@@ -27,5 +28,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/SignIn"
+        android:enabled="false"
         android:theme="@style/MaterialButton_2" />
 </LinearLayout>
