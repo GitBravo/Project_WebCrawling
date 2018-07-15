@@ -13,11 +13,11 @@ public class CustomDialogForLogin extends Dialog implements View.OnClickListener
     private static final int LAYOUT = R.layout.custom_dialog_for_login;
     private Context mContext;
 
-    private TextInputEditText editText_id;
-    private TextInputEditText editText_pw;
-    private Button login_btn;
+    private TextInputEditText mEditText_ID;
+    private TextInputEditText mEditText_PW;
+    private Button mDialogLoginBtn;
 
-    public CustomDialogForLogin(@NonNull Context context) {
+    CustomDialogForLogin(@NonNull Context context) {
         super(context);
         this.mContext = context;
     }
@@ -27,14 +27,14 @@ public class CustomDialogForLogin extends Dialog implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(LAYOUT);
 
-        editText_id = findViewById(R.id.dialog_editText_id);
-        editText_pw = findViewById(R.id.dialog_editText_pw);
-        login_btn = findViewById(R.id.dialog_login_btn);
-        login_btn.setOnClickListener(this);
+        mEditText_ID = findViewById(R.id.dialog_editText_id);
+        mEditText_PW = findViewById(R.id.dialog_editText_pw);
+        mDialogLoginBtn = findViewById(R.id.dialog_login_btn);
+        mDialogLoginBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
-        Toast.makeText(mContext, "아이디 : " + editText_id.getText(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "하앍", Toast.LENGTH_SHORT).show();
     }
 }

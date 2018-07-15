@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
@@ -38,6 +39,7 @@ public class Board extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
     private NavigationView navigationView;
+    private View navigationHeaderView;
 
     // Back 버튼 연속눌림 시간측정 변수
     private long time = 0;
@@ -55,10 +57,6 @@ public class Board extends AppCompatActivity {
 
         // 광고 객체 초기화
         MobileAds.initialize(this, "ca-app-pub-1701862199489144~5554907767");
-
-        // 네비게이션 헤더 버튼 초기화 후 버튼 리스너 부착
-        Authentication auth = new Authentication(Board.this);
-        auth.setLoginButtonOnClickListener();
 
         // 초기 설정
         boardTitle = "Tech"; // 기본 게시판 제목
@@ -181,6 +179,16 @@ public class Board extends AppCompatActivity {
                 mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
                 mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
                 return false;
+            }
+        });
+
+        // 네비게이션 헤더뷰 초기화
+        navigationHeaderView = navigationView.getHeaderView(0);
+        Button loginBtn = navigationHeaderView.findViewById(R.id.header_login_btn);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new CustomDialogForLogin(Board.this).show();
             }
         });
 
