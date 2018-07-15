@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class board extends AppCompatActivity {
+public class Board extends AppCompatActivity {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerViewAdapterForBoard mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -56,6 +56,10 @@ public class board extends AppCompatActivity {
         // 광고 객체 초기화
         MobileAds.initialize(this, "ca-app-pub-1701862199489144~5554907767");
 
+        // 네비게이션 헤더 버튼 초기화 후 버튼 리스너 부착
+        Authentication auth = new Authentication(Board.this);
+        auth.setLoginButtonOnClickListener();
+
         // 초기 설정
         boardTitle = "Tech"; // 기본 게시판 제목
         boardURL = "https://okky.kr/articles/tech"; // 기본 게시판 URL
@@ -72,7 +76,6 @@ public class board extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         // 각 게시글에 대한 정보를 저장하는 변수 6개 객체 할당
         mTitle = new ArrayList<>();
@@ -91,7 +94,7 @@ public class board extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // 스크롤 최하단 도착 시 액션
-                new JsoupAsyncTask(board.this, currentPage++).execute();
+                new JsoupAsyncTask(Board.this, currentPage++).execute();
             }
         };
 
@@ -105,7 +108,7 @@ public class board extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 // 아이템 클릭 시 액션
-                Intent intent = new Intent(board.this, detail.class);
+                Intent intent = new Intent(Board.this, Detail.class);
                 intent.putExtra("mTitle", mTitle.get(position)); // 글제목
                 intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글주소
                 intent.putExtra("mId", mId.get(position)); // 아이디
@@ -174,7 +177,7 @@ public class board extends AppCompatActivity {
                     boardURL = "https://okky.kr/articles/resumes";
                 }
                 setLocalDataRemove();
-                new JsoupAsyncTask(board.this, 0).execute(); // 새 게시판 글 갱신
+                new JsoupAsyncTask(Board.this, 0).execute(); // 새 게시판 글 갱신
                 mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
                 mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
                 return false;
@@ -187,13 +190,13 @@ public class board extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 setLocalDataRemove();
-                new JsoupAsyncTask(board.this, 0).execute();
+                new JsoupAsyncTask(Board.this, 0).execute();
                 currentPage = 1;
             }
         });
 
         // 최초 실행시 게시글 불러오기
-        new JsoupAsyncTask(board.this, currentPage++).execute();
+        new JsoupAsyncTask(Board.this, currentPage++).execute();
     }
 
     @Override
@@ -235,10 +238,10 @@ public class board extends AppCompatActivity {
         위 문제를 해결하기 위해서는 익명 클래스, 로컬 및 내부 클래스 대신 static 중첩 클래스를 사용하거나
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
-        private WeakReference<board> mActivityReference;
+        private WeakReference<Board> mActivityReference;
         private int mPage;
 
-        JsoupAsyncTask(board context, int page) {
+        JsoupAsyncTask(Board context, int page) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
             mPage = page;
@@ -253,7 +256,7 @@ public class board extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             int boardCount;
-            board activity = mActivityReference.get();
+            Board activity = mActivityReference.get();
             try {
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
@@ -352,11 +355,11 @@ public class board extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
-            board activity = mActivityReference.get(); // Activity 객체 획득
+            Board activity = mActivityReference.get(); // Activity 객체 획득
             activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
             activity.getSupportActionBar().setTitle(activity.boardTitle); // 게시판 제목 재설정
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
-            activity.mScrollListener.resetState();
+            activity.mScrollListener.resetState(); // 스크롤바 위치 재조정
         }
     }
 }

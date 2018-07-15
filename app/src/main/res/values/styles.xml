@@ -8,5 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MaterialButton_1" parent="Theme.AppCompat">
+        <item name="android:textColor">@color/colorWrite</item>
+        <item name="colorButtonNormal">@color/colorPrimaryDark</item>
+        <item name="colorControlHighlight">@color/colorWrite</item>
+    </style>
+
+    <style name="MaterialButton_2" parent="Theme.AppCompat">
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="colorButtonNormal">@color/colorWrite</item>
+        <item name="colorControlHighlight">@color/colorPrimaryDark</item>
+    </style>
+
 
 </resources>

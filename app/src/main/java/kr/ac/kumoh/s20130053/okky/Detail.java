@@ -21,8 +21,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class detail extends AppCompatActivity {
-    private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits; // board 에서 받아오는 데이터
+public class Detail extends AppCompatActivity {
+    private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits; // Board 에서 받아오는 데이터
 
     private TextView mContent; // 글 내용
     private ArrayList<String> commentNickname; // 덧글 게시자
@@ -45,7 +45,7 @@ public class detail extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        // board 액티비티로부터 현재 게시글 데이터 수신
+        // Board 액티비티로부터 현재 게시글 데이터 수신
         Intent intent = getIntent();
         mTitle = intent.getStringExtra("mTitle");
         mTitle_Href = intent.getStringExtra("mTitle_Href");
@@ -96,10 +96,10 @@ public class detail extends AppCompatActivity {
         위 문제를 해결하기 위해서는 익명 클래스, 로컬 및 내부 클래스 대신 static 중첩 클래스를 사용하거나
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
-        private WeakReference<detail> mActivityReference;
+        private WeakReference<Detail> mActivityReference;
         private String content; // 게시글 내용
 
-        JsoupAsyncTask(detail context) {
+        JsoupAsyncTask(Detail context) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
         }
@@ -112,7 +112,7 @@ public class detail extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
-            detail activity = mActivityReference.get();
+            Detail activity = mActivityReference.get();
             content = "";
             try {
                 /* div.className : 클래스명 className 만 가져오기
@@ -167,7 +167,7 @@ public class detail extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
-            detail activity = mActivityReference.get(); // Activity 객체 획득
+            Detail activity = mActivityReference.get(); // Activity 객체 획득
             activity.mContent.setText(endBlankRemover(String.valueOf(Html.fromHtml(content)))); // 게시물 내용 View 에 출력
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
