@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <!--
     <item android:title="Q&amp;A">
         <menu>
             <item
@@ -18,7 +17,6 @@
                 android:title="Blockchain Q&amp;A" />
         </menu>
     </item>
-    -->
     <item android:title="Tech">
         <menu>
             <item

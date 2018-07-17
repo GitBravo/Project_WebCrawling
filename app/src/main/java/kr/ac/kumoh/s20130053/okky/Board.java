@@ -48,6 +48,9 @@ public class Board extends AppCompatActivity {
     private String boardTitle;
     private int boardPageCount;
 
+    // Q&A 게시판인지 여부 판단 변수
+    public static boolean isQNA;
+
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 활동점수, 게시시간
     private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mActPoint, mDate;
 
@@ -64,6 +67,7 @@ public class Board extends AppCompatActivity {
         boardURL = "https://okky.kr/articles/tech"; // 기본 게시판 URL
         boardPageCount = 20; // 기본 게시판 글 개수
         currentPage = 0; // 기본 게시판 페이지 번호
+        isQNA = false; // QNA 게시판 여부
 
         // ActionBar 대신 ToolBar 적용
         setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolBar_board));
@@ -112,8 +116,14 @@ public class Board extends AppCompatActivity {
                 intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글주소
                 intent.putExtra("mId", mId.get(position)); // 아이디
                 intent.putExtra("mDate", mDate.get(position)); // 게시날짜
-                intent.putExtra("mRecCount", mCount.get(3 * position + 1)); // 추천수
-                intent.putExtra("mHits", mCount.get(3 * position + 2)); // 조회수
+                if (isQNA) {
+                    intent.putExtra("mRecCount", mCount.get(2 * position)); // 추천수
+                    intent.putExtra("mHits", mCount.get(2 * position + 1)); // 조회수
+                } else {
+                    intent.putExtra("mRecCount", mCount.get(3 * position + 1)); // 추천수
+                    intent.putExtra("mHits", mCount.get(3 * position + 2)); // 조회수
+                }
+
                 startActivity(intent);
             }
 
@@ -129,51 +139,78 @@ public class Board extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-                if (id == R.id.tech_ALL) {
+                if (id == R.id.qna_all) {
+                    boardTitle = "Q&A";
+                    boardURL = "https://okky.kr/articles/questions";
+                    isQNA = true;
+                } else if (id == R.id.qna_tech) {
+                    boardTitle = "Tech Q&A";
+                    boardURL = "https://okky.kr/articles/tech-qna";
+                    isQNA = true;
+                } else if (id == R.id.qna_blockchain) {
+                    boardTitle = "Blockchain Q&A";
+                    boardURL = "https://okky.kr/articles/blockchain-qna";
+                    isQNA = true;
+                } else if (id == R.id.tech_ALL) {
                     boardTitle = "Tech";
                     boardURL = "https://okky.kr/articles/tech";
+                    isQNA = false;
                 } else if (id == R.id.tech_news) {
                     boardTitle = "IT News & 정보";
                     boardURL = "https://okky.kr/articles/news";
+                    isQNA = false;
                 } else if (id == R.id.tech_tips) {
                     boardTitle = "Tips & 강좌";
                     boardURL = "https://okky.kr/articles/tips";
+                    isQNA = false;
                 } else if (id == R.id.community_all) {
                     boardTitle = "커뮤니티";
                     boardURL = "https://okky.kr/articles/community";
+                    isQNA = false;
                 } else if (id == R.id.community_notice) {
                     boardTitle = "공지사항";
                     boardURL = "https://okky.kr/articles/notice";
+                    isQNA = false;
                 } else if (id == R.id.community_life) {
                     boardTitle = "사는얘기";
                     boardURL = "https://okky.kr/articles/life";
+                    isQNA = false;
                 } else if (id == R.id.community_forum) {
                     boardTitle = "포럼";
                     boardURL = "https://okky.kr/articles/forum";
+                    isQNA = false;
                 } else if (id == R.id.community_it_event) {
                     boardTitle = "IT 행사";
                     boardURL = "https://okky.kr/articles/event";
+                    isQNA = false;
                 } else if (id == R.id.community_study) {
                     boardTitle = "정기모임/스터디";
                     boardURL = "https://okky.kr/articles/gathering";
+                    isQNA = false;
                 } else if (id == R.id.community_edu) {
                     boardTitle = "학원/홍보";
                     boardURL = "https://okky.kr/articles/promote";
+                    isQNA = false;
                 } else if (id == R.id.column) {
                     boardTitle = "칼럼";
                     boardURL = "https://okky.kr/articles/columns";
+                    isQNA = false;
                 } else if (id == R.id.jobs_ALL) {
                     boardTitle = "Jobs";
                     boardURL = "https://okky.kr/articles/jobs";
+                    isQNA = false;
                 } else if (id == R.id.jobs_goodCompany) {
                     boardTitle = "좋은회사/나쁜회사";
                     boardURL = "https://okky.kr/articles/evalcom";
+                    isQNA = false;
                 } else if (id == R.id.jobs_opening) {
                     boardTitle = "구인";
                     boardURL = "https://okky.kr/articles/recruit";
+                    isQNA = false;
                 } else if (id == R.id.jobs_jobHunt) {
                     boardTitle = "구직";
                     boardURL = "https://okky.kr/articles/resumes";
+                    isQNA = false;
                 }
                 setLocalDataRemove();
                 new JsoupAsyncTask(Board.this, 0).execute(); // 새 게시판 글 갱신
@@ -231,7 +268,7 @@ public class Board extends AppCompatActivity {
             super.onBackPressed();
     }
 
-    public void setLocalDataRemove(){
+    public void setLocalDataRemove() {
         mTitle.clear();
         mTitle_Href.clear();
         mCount.clear();
@@ -299,20 +336,37 @@ public class Board extends AppCompatActivity {
                     boardCount++;
                 }
 
-                // 게시글 덧글수, 추천수, 조회수. 게시글당 3개씩 나옴
-                Elements recCount = doc.select("#list-article > " +
-                        ".panel.panel-default " +
-                        ".list-group " +
-                        ".list-group-item-summary.clearfix " +
-                        "ul " +
-                        "li");
-                boardCount = 1;
-                for (Element link : recCount) {
-                    if (boardCount > activity.boardPageCount * 3)
-                        break;
-                    activity.mCount.add(link.text().trim());
-                    boardCount++;
+                // QNA 일 경우 추천수, 덧글수 게시글당 2개씩 나옴
+                if (isQNA) {
+                    Elements recCount = doc.select("#list-article > " +
+                            ".panel.panel-default " +
+                            ".list-group " +
+                            ".list-summary-wrapper.clearfix " +
+                            ".item-evaluate-count");
+                    boardCount = 1;
+                    for (Element link : recCount) {
+                        if (boardCount > activity.boardPageCount * 2)
+                            break;
+                        activity.mCount.add(link.text().trim());
+                        boardCount++;
+                    }
+                } else {
+                    // 게시글 덧글수, 추천수, 조회수. 게시글당 3개씩 나옴
+                    Elements recCount = doc.select("#list-article > " +
+                            ".panel.panel-default " +
+                            ".list-group " +
+                            ".list-group-item-summary.clearfix " +
+                            "ul " +
+                            "li");
+                    boardCount = 1;
+                    for (Element link : recCount) {
+                        if (boardCount > activity.boardPageCount * 3)
+                            break;
+                        activity.mCount.add(link.text().trim());
+                        boardCount++;
+                    }
                 }
+
 
                 // 게시글 아이디, 유저정보주소
                 Elements account = doc.select("#list-article > " +

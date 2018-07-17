@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import static kr.ac.kumoh.s20130053.okky.Board.isQNA;
+
 public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerViewAdapterForBoard.ViewHolder> {
     private Context mContext;
     private ArrayList<String> mArray;
@@ -17,7 +19,11 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
     private ArrayList<String> mDate;
     private ArrayList<String> mId;
 
-    RecyclerViewAdapterForBoard(Context context, ArrayList<String> title, ArrayList<String> comCount, ArrayList<String> date, ArrayList<String> id) {
+    RecyclerViewAdapterForBoard(Context context,
+                                ArrayList<String> title,
+                                ArrayList<String> comCount,
+                                ArrayList<String> date,
+                                ArrayList<String> id) {
         this.mContext = context;
         this.mArray = title;
         this.mComCount = comCount;
@@ -36,8 +42,13 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mTitle.setText(mArray.get(position)); // 제목
-        holder.mComment.setText(mComCount.get(3*position)); // 덧글수
-        holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(3*position+1) + "ㆍ" + mComCount.get(3*position+2)); // 게시날짜ㆍ추천수ㆍ조회수
+        if (isQNA){
+            holder.mComment.setText(mComCount.get(2*position) + "ㆍ" + mComCount.get(2*position+1)); // 추천수ㆍ덧글수
+            holder.mDate.setText(mDate.get(position)); // 게시날짜
+        }else{
+            holder.mComment.setText(mComCount.get(3*position)); // 덧글수
+            holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(3*position+1) + "ㆍ" + mComCount.get(3*position+2)); // 게시날짜ㆍ추천수ㆍ조회수
+        }
         holder.mAccount.setText(mId.get(position)); // 아이디
     }
 
