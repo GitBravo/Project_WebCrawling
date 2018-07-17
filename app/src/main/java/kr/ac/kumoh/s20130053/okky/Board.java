@@ -1,5 +1,6 @@
 package kr.ac.kumoh.s20130053.okky;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -46,10 +48,14 @@ public class Board extends AppCompatActivity {
     private long time = 0;
     private String boardURL;
     private String boardTitle;
+    private String searchKeyword;
     private int boardPageCount;
 
     // Q&A 게시판인지 여부 판단 변수
     public static boolean isQNA;
+
+    // 검색시 쿼리문 저장 변수
+    private String query;
 
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 활동점수, 게시시간
     private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mActPoint, mDate;
@@ -63,11 +69,13 @@ public class Board extends AppCompatActivity {
         MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
 
         // 초기 설정
-        boardTitle = "Tech"; // 기본 게시판 제목
-        boardURL = "https://okky.kr/articles/tech"; // 기본 게시판 URL
+        boardTitle = "커뮤니티"; // 기본 게시판 제목
+        searchKeyword = "";
+        boardURL = "https://okky.kr/articles/community"; // 기본 게시판 URL
         boardPageCount = 20; // 기본 게시판 글 개수
         currentPage = 0; // 기본 게시판 페이지 번호
         isQNA = false; // QNA 게시판 여부
+        query = ""; // 검색 쿼리문
 
         // ActionBar 대신 ToolBar 적용
         setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolBar_board));
@@ -142,75 +150,111 @@ public class Board extends AppCompatActivity {
                 if (id == R.id.qna_all) {
                     boardTitle = "Q&A";
                     boardURL = "https://okky.kr/articles/questions";
+                    searchKeyword = "";
                     isQNA = true;
+                    query = "";
                 } else if (id == R.id.qna_tech) {
                     boardTitle = "Tech Q&A";
                     boardURL = "https://okky.kr/articles/tech-qna";
+                    searchKeyword = "";
                     isQNA = true;
+                    query = "";
                 } else if (id == R.id.qna_blockchain) {
                     boardTitle = "Blockchain Q&A";
                     boardURL = "https://okky.kr/articles/blockchain-qna";
+                    searchKeyword = "";
                     isQNA = true;
+                    query = "";
                 } else if (id == R.id.tech_ALL) {
                     boardTitle = "Tech";
                     boardURL = "https://okky.kr/articles/tech";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.tech_news) {
                     boardTitle = "IT News & 정보";
                     boardURL = "https://okky.kr/articles/news";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.tech_tips) {
                     boardTitle = "Tips & 강좌";
                     boardURL = "https://okky.kr/articles/tips";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_all) {
                     boardTitle = "커뮤니티";
                     boardURL = "https://okky.kr/articles/community";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_notice) {
                     boardTitle = "공지사항";
                     boardURL = "https://okky.kr/articles/notice";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_life) {
                     boardTitle = "사는얘기";
                     boardURL = "https://okky.kr/articles/life";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_forum) {
                     boardTitle = "포럼";
                     boardURL = "https://okky.kr/articles/forum";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_it_event) {
                     boardTitle = "IT 행사";
                     boardURL = "https://okky.kr/articles/event";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_study) {
                     boardTitle = "정기모임/스터디";
                     boardURL = "https://okky.kr/articles/gathering";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.community_edu) {
                     boardTitle = "학원/홍보";
                     boardURL = "https://okky.kr/articles/promote";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.column) {
                     boardTitle = "칼럼";
                     boardURL = "https://okky.kr/articles/columns";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.jobs_ALL) {
                     boardTitle = "Jobs";
                     boardURL = "https://okky.kr/articles/jobs";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.jobs_goodCompany) {
                     boardTitle = "좋은회사/나쁜회사";
                     boardURL = "https://okky.kr/articles/evalcom";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.jobs_opening) {
                     boardTitle = "구인";
                     boardURL = "https://okky.kr/articles/recruit";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 } else if (id == R.id.jobs_jobHunt) {
                     boardTitle = "구직";
                     boardURL = "https://okky.kr/articles/resumes";
+                    searchKeyword = "";
                     isQNA = false;
+                    query = "";
                 }
                 setLocalDataRemove();
                 new JsoupAsyncTask(Board.this, 0).execute(); // 새 게시판 글 갱신
@@ -245,19 +289,49 @@ public class Board extends AppCompatActivity {
         });
 
         // 최초 실행시 게시글 불러오기
+        mSwipeRefreshLayout.setRefreshing(true);
         new JsoupAsyncTask(Board.this, currentPage++).execute();
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // 검색 액션 버튼 툴바에 부착
+        getMenuInflater().inflate(R.menu.toolbar_search_btn, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // 좌상단 토글버튼
+        // 툴바에 부착된 버튼의 액션을 결정
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                final CustomDialogForSearch dialog = new CustomDialogForSearch(Board.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
+                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    // 검색 액션버튼 클릭 액션
+                    @Override
+                    public void onDismiss(DialogInterface dialogInterface) {
+                        /* Dialog 의 EditText 가 바로 포커스를 가져가서 소프트키보드가 자동으로 나오게끔 설정.
+                        * 일반 액티비티에서는 자동으로 포커스를 갖지만 Dialog 내부에서는 포커스를 수동으로 잡아줘야함*/
+
+                        // 참고로 Dismiss 되는 경우는 뒤로가기 or 아무것도 입력안함 2가지 상태
+                        if (dialog.getKeyWord() != null) {
+                            setLocalDataRemove();
+                            query = dialog.getQuery();
+                            new JsoupAsyncTask(Board.this, 0).execute();
+                            mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
+                            searchKeyword = " : " + dialog.getKeyWord();
+                        }
+                    }
+                });
+                break;
+        }
         return super.onOptionsItemSelected(item) || mToggle.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
-        mDrawerLayout = findViewById(R.id.drawerLayout);
-
         // 드로워레이아웃이 열려있는 상태에서 Back 키 누르면 자동 닫힘
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
             mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -320,7 +394,7 @@ public class Board extends AppCompatActivity {
                  * 띄어쓰기로 각 태그를 구분하면 하위에 있는 해당 이름의 태그를 모두 가져온다.
                  * 하지만 > 로 구분하면 해당 계층구조에 있는 태그만 가져온다.
                  * */
-                Document doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * activity.boardPageCount) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
+                Document doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * activity.boardPageCount) + "&max=20&sort=id&order=desc" + activity.query).get(); // 타겟 페이지 URL
 
                 // 1. 게시글 제목 2. 게시글 주소
                 Elements title = doc.select("#list-article > " +
@@ -423,7 +497,7 @@ public class Board extends AppCompatActivity {
             // 백그라운드 작업 진행 후 실행될 작업
             Board activity = mActivityReference.get(); // Activity 객체 획득
             activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
-            activity.getSupportActionBar().setTitle(activity.boardTitle); // 게시판 제목 재설정
+            activity.getSupportActionBar().setTitle(activity.boardTitle + activity.searchKeyword); // 게시판 제목 재설정
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
             activity.mScrollListener.resetState(); // 스크롤바 위치 재조정
         }

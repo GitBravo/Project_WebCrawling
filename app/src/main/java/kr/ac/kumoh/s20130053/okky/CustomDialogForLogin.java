@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class CustomDialogForLogin extends Dialog implements View.OnClickListener {
     private static final int LAYOUT = R.layout.custom_dialog_for_login;

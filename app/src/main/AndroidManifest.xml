@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="kr.ac.kumoh.s20130053.okky">
+    package="kr.ac.kumoh.s20130053.okky">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -11,6 +11,7 @@
         android:roundIcon="@drawable/okky_icon"
         android:supportsRtl="true"
         android:theme="@style/BoardTheme">
+
         <!-- android:icon="@mipmap/ic_launcher" 기본 아이콘 -->
         <!-- android:roundIcon="@mipmap/ic_launcher_round" 라운드 아이콘 -->
 
@@ -26,7 +27,9 @@
 
         <activity
             android:name=".Detail"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" >
+        </activity>
+
     </application>
 
 </manifest>
