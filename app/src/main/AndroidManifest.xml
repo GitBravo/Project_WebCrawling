@@ -14,7 +14,9 @@
         <!-- android:icon="@mipmap/ic_launcher" 기본 아이콘 -->
         <!-- android:roundIcon="@mipmap/ic_launcher_round" 라운드 아이콘 -->
 
-        <activity android:name=".Board">
+        <activity
+            android:name=".Board"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,7 +24,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Detail"/>
+        <activity
+            android:name=".Detail"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

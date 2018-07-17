@@ -234,6 +234,7 @@ public class Board extends AppCompatActivity {
 
         // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
