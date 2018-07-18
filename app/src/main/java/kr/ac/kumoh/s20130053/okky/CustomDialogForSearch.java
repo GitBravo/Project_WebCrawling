@@ -14,12 +14,13 @@ public class CustomDialogForSearch extends Dialog implements View.OnClickListene
     private Context mContext;
     private EditText mEditText;
     private Button mSearchBtn;
-    private String mKeyWord;
-    private String mQuery;
+    private String mSearchKeyword;
+    private Boolean isSuccess;
 
     public CustomDialogForSearch(@NonNull Context context) {
         super(context);
         this.mContext = context;
+        this.isSuccess = false;
     }
 
     @Override
@@ -34,20 +35,24 @@ public class CustomDialogForSearch extends Dialog implements View.OnClickListene
 
     @Override
     public void onClick(View view) {
-        if (mEditText.getText().toString().equals("")) {
+        mSearchKeyword = mEditText.getText().toString();
+        if (mSearchKeyword.equals("") || mSearchKeyword == null)
             Toast.makeText(mContext, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
-            return;
+        else{
+            isSuccess = true;
+            dismiss();
         }
-        mKeyWord = mEditText.getText().toString();
-        mQuery = "&query=" + mEditText.getText().toString().replaceAll(" ", "+");
-        dismiss();
     }
 
-    public String getKeyWord(){
-        return mKeyWord;
+    public Boolean getSuccess() {
+        return isSuccess;
+    }
+
+    public String getSearchKeyword(){
+        return mSearchKeyword;
     }
 
     public String getQuery(){
-        return mQuery;
+        return "&query=" + mSearchKeyword.replaceAll(" ", "+");
     }
 }
