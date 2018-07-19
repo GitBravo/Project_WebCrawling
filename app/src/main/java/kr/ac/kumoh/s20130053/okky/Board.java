@@ -61,7 +61,6 @@ public class Board extends AppCompatActivity {
         // 광고 객체 초기화
         MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
 
-        Toast.makeText(this, "초기설정", Toast.LENGTH_SHORT).show();
         // 초기 설정
         boardTitle = "커뮤니티"; // 기본 게시판 제목
         boardURL = "https://okky.kr/articles/community"; // 기본 게시판 URL
@@ -122,7 +121,6 @@ public class Board extends AppCompatActivity {
                     intent.putExtra("mRecCount", mCount.get(3 * position + 1)); // 추천수
                     intent.putExtra("mHits", mCount.get(3 * position + 2)); // 조회수
                 }
-
                 startActivity(intent);
             }
 
@@ -252,7 +250,7 @@ public class Board extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 검색 액션 버튼 툴바에 부착
-        getMenuInflater().inflate(R.menu.toolbar_search_btn, menu);
+        // getMenuInflater().inflate(R.menu.toolbar_search_btn, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -268,8 +266,6 @@ public class Board extends AppCompatActivity {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
                         if (dialog.getSuccess()) {
-
-
                             currentPage = 0;
                             setLocalDataRemove(); // 기존 데이터 제거
                             new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신

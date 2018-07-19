@@ -43,8 +43,8 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mTitle.setText(mArray.get(position)); // 제목
         if (isQNA){
-            holder.mComment.setText(mComCount.get(2*position) + "ㆍ" + mComCount.get(2*position+1)); // 추천수ㆍ덧글수
-            holder.mDate.setText(mDate.get(position)); // 게시날짜
+            holder.mComment.setText(mComCount.get(2*position+1)); // 덧글수
+            holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(2*position)); // 게시날짜ㆍ추천수
         }else{
             holder.mComment.setText(mComCount.get(3*position)); // 덧글수
             holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(3*position+1) + "ㆍ" + mComCount.get(3*position+2)); // 게시날짜ㆍ추천수ㆍ조회수
