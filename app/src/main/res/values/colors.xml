@@ -5,9 +5,10 @@
     <color name="colorAccent">#E67D3E</color>
     <color name="colorBlack">#000</color>
     <color name="colorWrite">#FFF</color>
-    <color name="transparent">#00000000</color> <!-- 투명도 -->
+    <color name="colorGray">#919191</color>
+    <color name="transparent">#4D000000</color> <!-- 투명도 -->
     <!--
-    투명도
+    ※ 투명도
     100% — FF
     90% — E6
     80% — CC
@@ -19,5 +20,5 @@
     20% — 33
     10% — 1A
     0% — 00
-                -->
+    -->
 </resources>
