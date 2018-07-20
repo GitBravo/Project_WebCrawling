@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,11 +17,11 @@ public class CustomDialogForSearch extends Dialog implements View.OnClickListene
     private Button mSearchBtn;
     private String mSearchKeyword;
     private Boolean isSuccess;
-
     public CustomDialogForSearch(@NonNull Context context) {
         super(context);
         this.mContext = context;
         this.isSuccess = false;
+        this.mSearchKeyword = "";
     }
 
     @Override
@@ -38,21 +39,31 @@ public class CustomDialogForSearch extends Dialog implements View.OnClickListene
         mSearchKeyword = mEditText.getText().toString();
         if (mSearchKeyword.equals("") || mSearchKeyword == null)
             Toast.makeText(mContext, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
-        else{
+        else {
             isSuccess = true;
             dismiss();
         }
     }
 
-    public Boolean getSuccess() {
+    public Boolean isSuccess() {
         return isSuccess;
     }
 
-    public String getSearchKeyword(){
-        return mSearchKeyword;
+    public String getSearchKeyword() {
+        return " : " + mSearchKeyword;
     }
 
-    public String getQuery(){
-        return "&query=" + mSearchKeyword.replaceAll(" ", "+");
+    public String getQuery() {
+        return "&query=" + mSearchKeyword
+                .replaceAll(" ", "+")
+                .replaceAll("[+]", "%2B")
+                .replaceAll("!", "%21")
+                .replaceAll("@", "%40")
+                .replaceAll("#", "%23")
+                .replaceAll("%", "%25")
+                .replaceAll("&", "%26")
+                .replaceAll("[(]", "%28")
+                .replaceAll("[)]", "%29")
+                .replaceAll("=", "%3D");
     }
 }

@@ -53,6 +53,8 @@ public class Board extends AppCompatActivity {
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 활동점수, 게시시간
     private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mActPoint, mDate;
 
+    private CustomDialogForSearch dialog; // 다이얼로그 액티비티 레퍼런스
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +96,7 @@ public class Board extends AppCompatActivity {
         mScrollListener = new RecyclerViewEndlessScrollListener(mLinearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                // 스크롤 최하단 도착 시 액션
+                // 스크롤 최하단 도착 시 게시글 추가로드
                 new JsoupAsyncTask(Board.this, currentPage++).execute();
             }
         };
@@ -209,6 +211,8 @@ public class Board extends AppCompatActivity {
                     boardURL = "https://okky.kr/articles/resumes";
                     isQNA = false;
                 }
+                if (dialog != null)
+                    dialog = null;
                 currentPage = 0;
                 setLocalDataRemove();
                 new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
@@ -250,7 +254,7 @@ public class Board extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 검색 액션 버튼 툴바에 부착
-        // getMenuInflater().inflate(R.menu.toolbar_search_btn, menu);
+        getMenuInflater().inflate(R.menu.toolbar_search_btn, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -259,13 +263,13 @@ public class Board extends AppCompatActivity {
         // 툴바에 부착된 버튼의 액션을 결정
         switch (item.getItemId()) {
             case R.id.action_search:
-                final CustomDialogForSearch dialog = new CustomDialogForSearch(Board.this);
+                dialog = new CustomDialogForSearch(Board.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialogInterface) {
-                        if (dialog.getSuccess()) {
+                        if (dialog.isSuccess()) {
                             currentPage = 0;
                             setLocalDataRemove(); // 기존 데이터 제거
                             new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
@@ -342,7 +346,17 @@ public class Board extends AppCompatActivity {
                  * 띄어쓰기로 각 태그를 구분하면 하위에 있는 해당 이름의 태그를 모두 가져온다.
                  * 하지만 > 로 구분하면 해당 계층구조에 있는 태그만 가져온다.
                  * */
-                Document doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20) + "&max=20&sort=id&order=desc").get(); // 타겟 페이지 URL
+
+                Document doc; // 타겟 페이지 URL
+                if (activity.dialog != null && activity.dialog.isSuccess()) {
+                    // 검색 상황
+                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
+                            + "&max=20&sort=id&order=desc" + activity.dialog.getQuery()).get();
+                } else {
+                    // 일반 상황
+                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
+                            + "&max=20&sort=id&order=desc").get();
+                }
 
                 // 1. 게시글 제목 2. 게시글 주소
                 Elements title = doc.select("#list-article > " +
@@ -445,7 +459,10 @@ public class Board extends AppCompatActivity {
             // 백그라운드 작업 진행 후 실행될 작업
             Board activity = mActivityReference.get(); // Activity 객체 획득
             activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
-            activity.getSupportActionBar().setTitle(activity.boardTitle); // 게시판 제목 재설정
+            if (activity.dialog != null && activity.dialog.isSuccess())
+                activity.getSupportActionBar().setTitle(activity.boardTitle + activity.dialog.getSearchKeyword());
+            else
+                activity.getSupportActionBar().setTitle(activity.boardTitle);
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
             activity.mScrollListener.resetState(); // 스크롤바 위치 재조정
         }
