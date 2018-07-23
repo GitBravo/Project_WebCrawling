@@ -7,11 +7,6 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/OptionMenu_donation"
-        android:title="@string/OptionMenu_donation"
-        app:showAsAction="never"/>
-
-    <item
         android:id="@+id/OptionMenu_info"
         android:title="@string/OptionMenu_info"
         app:showAsAction="never"/>

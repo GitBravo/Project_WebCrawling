@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/okky_icon"
         android:supportsRtl="true"
-        android:theme="@style/BoardTheme">
+        android:theme="@style/BaseTheme">
 
         <!-- android:icon="@mipmap/ic_launcher" 기본 아이콘 -->
         <!-- android:roundIcon="@mipmap/ic_launcher_round" 라운드 아이콘 -->
@@ -24,15 +24,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Detail"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".SearchActivityOnKeyboard"
-            android:theme="@style/TransparentDisplay">
-        </activity>
+            android:theme="@style/TransparentDisplay"></activity>
+        <activity android:name=".OptionMenuSetting"></activity>
     </application>
 
 </manifest>

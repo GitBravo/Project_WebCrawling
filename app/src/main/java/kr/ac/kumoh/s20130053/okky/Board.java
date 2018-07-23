@@ -271,8 +271,13 @@ public class Board extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // 툴바에 부착된 버튼의 액션을 결정
         switch (item.getItemId()) {
-            case R.id.action_search:
+            case R.id.actionBtn_search :
                 startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
+                break;
+            case R.id.OptionMenu_setting :
+                startActivity(new Intent(this, OptionMenuSetting.class));
+                break;
+            case R.id.OptionMenu_info :
                 break;
         }
         return super.onOptionsItemSelected(item) || mToggle.onOptionsItemSelected(item);
