@@ -49,12 +49,14 @@ public class Board extends AppCompatActivity {
     private long time = 0;
     private String boardURL;
     private String boardTitle;
-    public static boolean isQNA; // Q&A 게시판인지 여부 판단 변수
+
+    // Q&A 게시판인지 여부 판단 변수
+    public static boolean isQNA;
 
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 활동점수, 게시시간
     private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mActPoint, mDate;
 
-    //    private CustomDialogForSearch dialog; // 다이얼로그 액티비티 레퍼런스
+    // 검색 액티비티 결과값 저장 변수
     private boolean isSearchComplete;
     private String searchKeyword;
     private String query;
@@ -216,8 +218,6 @@ public class Board extends AppCompatActivity {
                     boardURL = "https://okky.kr/articles/resumes";
                     isQNA = false;
                 }
-//                if (dialog != null)
-//                    dialog = null;
                 if (isSearchComplete)
                     isSearchComplete = false;
                 currentPage = 0;
@@ -272,21 +272,7 @@ public class Board extends AppCompatActivity {
         // 툴바에 부착된 버튼의 액션을 결정
         switch (item.getItemId()) {
             case R.id.action_search:
-//                dialog = new CustomDialogForSearch(Board.this);
-//                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//                dialog.show();
-//                dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss(DialogInterface dialogInterface) {
-//                        if (dialog.isSuccess()) {
-//                            currentPage = 0;
-//                            setLocalDataRemove(); // 기존 데이터 제거
-//                            new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
-//                            mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
-//                        }
-//                    }
-//                });
-                startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 1);
+                startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
                 break;
         }
         return super.onOptionsItemSelected(item) || mToggle.onOptionsItemSelected(item);
@@ -294,8 +280,10 @@ public class Board extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
+        if (requestCode == 100) {
+            // 검색 성공
             if (resultCode == Activity.RESULT_OK) {
+                isSearchComplete = true;
                 searchKeyword = data.getStringExtra("searchKeyword");
                 query = data.getStringExtra("query");
 
@@ -383,15 +371,6 @@ public class Board extends AppCompatActivity {
                     doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
                             + "&max=20&sort=id&order=desc").get();
                 }
-//                if (activity.dialog != null && activity.dialog.isSuccess()) {
-//                    // 검색 상황
-//                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
-//                            + "&max=20&sort=id&order=desc" + activity.dialog.getQuery()).get();
-//                } else {
-//                    // 일반 상황
-//                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
-//                            + "&max=20&sort=id&order=desc").get();
-//                }
 
                 // 1. 게시글 제목 2. 게시글 주소
                 Elements title = doc.select("#list-article > " +
@@ -498,10 +477,6 @@ public class Board extends AppCompatActivity {
                 activity.getSupportActionBar().setTitle(activity.boardTitle + activity.searchKeyword);
             else
                 activity.getSupportActionBar().setTitle(activity.boardTitle);
-//            if (activity.dialog != null && activity.dialog.isSuccess())
-//                activity.getSupportActionBar().setTitle(activity.boardTitle + activity.dialog.getSearchKeyword());
-//            else
-//                activity.getSupportActionBar().setTitle(activity.boardTitle);
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
             activity.mScrollListener.resetState(); // 스크롤바 위치 재조정
         }

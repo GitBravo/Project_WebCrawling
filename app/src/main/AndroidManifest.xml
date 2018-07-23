@@ -31,7 +31,7 @@
 
         <activity
             android:name=".SearchActivityOnKeyboard"
-            android:theme="@style/Transparent">
+            android:theme="@style/TransparentDisplay">
         </activity>
     </application>
 

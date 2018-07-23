@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraint"
+    android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    tools:context=".Board">
+    tools:context=".SearchActivityOnKeyboard">
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
@@ -28,6 +28,8 @@
                 android:layout_width="0dp"
                 android:layout_weight="4"
                 android:layout_height="wrap_content"
+                android:hint="@string/Search_Hint"
+                android:textColorHint="@color/colorGray"
                 android:textColor="@color/colorBlack">
                 <requestFocus />
             </EditText>
@@ -38,7 +40,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:theme="@style/MaterialButton_1"
-                android:text="@string/action_search"/>
+                android:text="@string/Search"/>
         </LinearLayout>
 
     </android.support.design.widget.BottomNavigationView>

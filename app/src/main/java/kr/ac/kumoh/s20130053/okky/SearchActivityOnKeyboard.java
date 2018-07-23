@@ -20,7 +20,7 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.searchactivity_on_keyboard);
+        setContentView(R.layout.search_activity_on_keyboard);
 
         // 기본값 초기화
         this.mKeyword = "";
@@ -34,14 +34,14 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
         softKeyboard.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         // 빈공간 클릭 시 액티비티 종료
-        ConstraintLayout constraintLayout = findViewById(R.id.constraint);
+        ConstraintLayout constraintLayout = findViewById(R.id.background);
         constraintLayout.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.constraint :
+            case R.id.background :
                 softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 finish();
                 break;
@@ -53,7 +53,9 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
                     Intent intent = new Intent();
                     intent.putExtra("searchKeyword", getSearchKeyword());
                     intent.putExtra("query", getQuery());
-                    setResult(Activity.RESULT_OK);
+                    setResult(Activity.RESULT_OK, intent);
+                    softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    finish();
                 }
                 break;
         }
@@ -75,5 +77,13 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
                 .replaceAll("[(]", "%28")
                 .replaceAll("[)]", "%29")
                 .replaceAll("=", "%3D");
+    }
+
+    @Override
+    protected void onStop() {
+        // 홈버튼 누를 시 검색 액티비티 및 키보드 종료
+        softKeyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        finish();
+        super.onStop();
     }
 }

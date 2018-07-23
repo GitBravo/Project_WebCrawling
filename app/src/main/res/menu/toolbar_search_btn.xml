@@ -6,7 +6,7 @@
     <!-- Search 버튼 -->
     <item android:id="@+id/action_search"
         android:icon="@drawable/baseline_search_white_48"
-        android:title="@string/action_search"
+        android:title="@string/Search"
         okky:showAsAction="ifRoom"  />
     <!-- showAsAction="ifRoom" 만약 공간이 있으면 표시 -->
 </menu>
