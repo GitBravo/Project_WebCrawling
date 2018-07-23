@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -260,7 +261,9 @@ public class Board extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // 검색 액션 버튼 툴바에 부착
-        getMenuInflater().inflate(R.menu.toolbar_search_btn, menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_search_btn, menu);
+        inflater.inflate(R.menu.toolbar_overflow_btn, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -10,6 +10,7 @@
     <string name="PW_Hint">비밀번호를 입력하세요</string>
     <string name="action_search">검색</string>
     <string name="search_keyword">검색어</string>
+    <string name="action_overflow">오버플로 버튼</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-4355755954533542/8563884913</string>
     <!-- TEST UNIT_ID : ca-app-pub-3940256099942544/6300978111 -->
