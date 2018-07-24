@@ -277,8 +277,6 @@ public class Board extends AppCompatActivity {
             case R.id.OptionMenu_setting :
                 startActivity(new Intent(this, OptionMenuSetting.class));
                 break;
-            case R.id.OptionMenu_info :
-                break;
         }
         return super.onOptionsItemSelected(item) || mToggle.onOptionsItemSelected(item);
     }
