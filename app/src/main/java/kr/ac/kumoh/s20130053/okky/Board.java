@@ -144,6 +144,10 @@ public class Board extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // 현재 리프레쉬중이면 아이템 선택 금지
+                if (mSwipeRefreshLayout.isRefreshing())
+                    return false;
+
                 int id = item.getItemId();
                 if (id == R.id.qna_all) {
                     boardTitle = "Q&A";
