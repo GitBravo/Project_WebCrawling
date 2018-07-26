@@ -235,15 +235,6 @@ public class Board extends AppCompatActivity {
 
         // 네비게이션 헤더뷰 초기화
         navigationHeaderView = navigationView.getHeaderView(0);
-        Button loginBtn = navigationHeaderView.findViewById(R.id.header_login_btn);
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomDialogForLogin dialog = new CustomDialogForLogin(Board.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
-            }
-        });
 
         // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);

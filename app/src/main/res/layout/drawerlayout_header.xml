@@ -12,24 +12,4 @@
         android:layout_height="83dp"
         android:layout_marginTop="25dp"
         android:src="@drawable/drawer_header_image" />
-
-    <Button
-        android:visibility="gone"
-        android:id="@+id/header_login_btn"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/Login"
-        android:enabled="false"
-        android:theme="@style/MaterialButton_1"/>
-
-    <Button
-        android:visibility="gone"
-        android:id="@+id/sign_in"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/SignIn"
-        android:enabled="false"
-        android:theme="@style/MaterialButton_2" />
 </LinearLayout>
