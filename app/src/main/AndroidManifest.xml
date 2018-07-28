@@ -29,8 +29,11 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".SearchActivityOnKeyboard"
-            android:theme="@style/TransparentDisplay"></activity>
-        <activity android:name=".OptionMenuSetting"></activity>
+            android:theme="@style/TransparentDisplay"/>
+
+        <activity
+            android:name=".OptionMenuSetting"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
