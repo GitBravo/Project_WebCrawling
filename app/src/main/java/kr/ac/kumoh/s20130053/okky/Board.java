@@ -49,6 +49,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     private long time = 0;
     private String boardURL;
     private String boardTitle;
+    private String sort;
 
     // Q&A 게시판인지 여부 판단 변수
     public static boolean isQNA;
@@ -91,6 +92,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         boardTitle = "커뮤니티"; // 기본 게시판 제목
         boardURL = "https://okky.kr/articles/community"; // 기본 게시판 URL
         currentPage = 0; // 게시판 시작 페이지 번호
+        sort = "id"; // 정렬 방법
         isQNA = false; // QNA 게시판 여부
         isSearchComplete = false; // 검색 여부
 
@@ -273,8 +275,9 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.bottomBtn1:
+                sort = "id";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
@@ -282,6 +285,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
                 break;
             case R.id.bottomBtn2:
+                sort = "voteCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimaryDark);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
@@ -289,6 +293,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
                 break;
             case R.id.bottomBtn3:
+                sort = "noteCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimaryDark);
@@ -296,6 +301,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
                 break;
             case R.id.bottomBtn4:
+                sort = "scrapCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
@@ -303,6 +309,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
                 break;
             case R.id.bottomBtn5:
+                sort = "viewCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
@@ -325,10 +332,10 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         // 툴바에 부착된 버튼의 액션을 결정
         switch (item.getItemId()) {
-            case R.id.actionBtn_search :
+            case R.id.actionBtn_search:
                 startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
                 break;
-            case R.id.OptionMenu_setting :
+            case R.id.OptionMenu_setting:
                 startActivity(new Intent(this, OptionMenuSetting.class));
                 break;
         }
@@ -422,11 +429,11 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 if (activity.isSearchComplete) {
                     // 검색 상황
                     doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
-                            + "&max=20&sort=id&order=desc" + activity.query).get();
+                            + "&max=20&sort=" + activity.sort + "&order=desc" + activity.query).get();
                 } else {
                     // 일반 상황
                     doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
-                            + "&max=20&sort=id&order=desc").get();
+                            + "&max=20&sort=" + activity.sort + "&order=desc").get();
                 }
 
                 // 1. 게시글 제목 2. 게시글 주소
