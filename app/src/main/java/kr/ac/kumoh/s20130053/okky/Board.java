@@ -92,7 +92,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         boardTitle = "커뮤니티"; // 기본 게시판 제목
         boardURL = "https://okky.kr/articles/community"; // 기본 게시판 URL
         currentPage = 0; // 게시판 시작 페이지 번호
-        sort = "id"; // 정렬 방법
+        sort = "id"; // 정렬 쿼리
+        bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark); // 정렬 버튼 색상변경
         isQNA = false; // QNA 게시판 여부
         isSearchComplete = false; // 검색 여부
 
@@ -244,11 +245,16 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 }
                 if (isSearchComplete)
                     isSearchComplete = false;
+                sort = "id";
+                bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
+                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
                 currentPage = 0;
                 setLocalDataRemove();
                 new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
                 mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
-                mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
                 return false;
             }
         });
@@ -269,12 +275,13 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         });
 
         // 최초 실행시 게시글 불러오기
-        mSwipeRefreshLayout.setRefreshing(true);
         new JsoupAsyncTask(Board.this, currentPage++).execute();
     }
 
     @Override
     public void onClick(View v) {
+        if (mSwipeRefreshLayout.isRefreshing())
+            return;
         switch (v.getId()) {
             case R.id.bottomBtn1:
                 sort = "id";
@@ -317,6 +324,9 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn5.setBackgroundResource(R.color.colorPrimaryDark);
                 break;
         }
+        currentPage = 0;
+        setLocalDataRemove();
+        new JsoupAsyncTask(Board.this, currentPage++).execute();
     }
 
     @Override
@@ -354,7 +364,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 currentPage = 0;
                 setLocalDataRemove(); // 기존 데이터 제거
                 new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
-                mSwipeRefreshLayout.setRefreshing(true); // 리프레쉬 아이콘 생성
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -403,6 +412,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         @Override
         protected void onPreExecute() {
             // 백그라운드 작업 진행 전 실행될 작업
+            Board activity = mActivityReference.get();
+            activity.mSwipeRefreshLayout.setRefreshing(true);
             super.onPreExecute();
         }
 
