@@ -2,6 +2,7 @@ package kr.ac.kumoh.s20130053.okky;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -32,7 +32,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class Board extends AppCompatActivity {
+public class Board extends AppCompatActivity implements View.OnClickListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerViewAdapterForBoard mAdapter;
     private LinearLayoutManager mLinearLayoutManager;
@@ -61,6 +61,12 @@ public class Board extends AppCompatActivity {
     private String searchKeyword;
     private String query;
 
+    private Button bottomBtn1;
+    private Button bottomBtn2;
+    private Button bottomBtn3;
+    private Button bottomBtn4;
+    private Button bottomBtn5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,6 +74,18 @@ public class Board extends AppCompatActivity {
 
         // 광고 객체 초기화
         MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
+
+        // Board 의 하단 버튼 5개 리스너 부착
+        bottomBtn1 = findViewById(R.id.bottomBtn1);
+        bottomBtn2 = findViewById(R.id.bottomBtn2);
+        bottomBtn3 = findViewById(R.id.bottomBtn3);
+        bottomBtn4 = findViewById(R.id.bottomBtn4);
+        bottomBtn5 = findViewById(R.id.bottomBtn5);
+        bottomBtn1.setOnClickListener(this);
+        bottomBtn2.setOnClickListener(this);
+        bottomBtn3.setOnClickListener(this);
+        bottomBtn4.setOnClickListener(this);
+        bottomBtn5.setOnClickListener(this);
 
         // 초기 설정
         boardTitle = "커뮤니티"; // 기본 게시판 제목
@@ -135,7 +153,7 @@ public class Board extends AppCompatActivity {
 
             @Override
             public void onLongItemClick(View view, int position) {
-
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(mTitle_Href.get(position))));
             }
         }));
 
@@ -251,6 +269,47 @@ public class Board extends AppCompatActivity {
         // 최초 실행시 게시글 불러오기
         mSwipeRefreshLayout.setRefreshing(true);
         new JsoupAsyncTask(Board.this, currentPage++).execute();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bottomBtn1:
+                bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
+                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+                break;
+            case R.id.bottomBtn2:
+                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn2.setBackgroundResource(R.color.colorPrimaryDark);
+                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+                break;
+            case R.id.bottomBtn3:
+                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn3.setBackgroundResource(R.color.colorPrimaryDark);
+                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+                break;
+            case R.id.bottomBtn4:
+                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn4.setBackgroundResource(R.color.colorPrimaryDark);
+                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+                break;
+            case R.id.bottomBtn5:
+                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+                bottomBtn5.setBackgroundResource(R.color.colorPrimaryDark);
+                break;
+        }
     }
 
     @Override

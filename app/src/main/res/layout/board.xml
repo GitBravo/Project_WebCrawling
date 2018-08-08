@@ -24,12 +24,62 @@
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="14">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bottomBtn1"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="최신순"
+            android:textColor="@color/colorWrite"
+            android:background="@color/colorPrimaryDark"/>
+        <Button
+            android:id="@+id/bottomBtn2"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="추천순"
+            android:textColor="@color/colorWrite"
+            android:background="@color/colorPrimaryDark"/>
+        <Button
+            android:id="@+id/bottomBtn3"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="댓글순"
+            android:textColor="@color/colorWrite"
+            android:background="@color/colorPrimaryDark"/>
+        <Button
+            android:id="@+id/bottomBtn4"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="스크랩순"
+            android:textColor="@color/colorWrite"
+            android:background="@color/colorPrimaryDark"/>
+        <Button
+            android:id="@+id/bottomBtn5"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="조회순"
+            android:textColor="@color/colorWrite"
+            android:background="@color/colorPrimaryDark"/>
+    </LinearLayout>
+
 </LinearLayout>
