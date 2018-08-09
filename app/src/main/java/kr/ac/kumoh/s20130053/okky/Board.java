@@ -251,9 +251,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn4.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
-                currentPage = 0;
-                setLocalDataRemove();
-                new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
+                setRefresh();
                 mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
                 return false;
             }
@@ -268,14 +266,12 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                currentPage = 0;
-                setLocalDataRemove();
-                new JsoupAsyncTask(Board.this, currentPage++).execute();
+                setRefresh();
             }
         });
 
         // 최초 실행시 게시글 불러오기
-        new JsoupAsyncTask(Board.this, currentPage++).execute();
+        setRefresh();
     }
 
     @Override
@@ -324,9 +320,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 bottomBtn5.setBackgroundResource(R.color.colorPrimaryDark);
                 break;
         }
-        currentPage = 0;
-        setLocalDataRemove();
-        new JsoupAsyncTask(Board.this, currentPage++).execute();
+        setRefresh();
     }
 
     @Override
@@ -361,9 +355,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 searchKeyword = data.getStringExtra("searchKeyword");
                 query = data.getStringExtra("query");
 
-                currentPage = 0;
-                setLocalDataRemove(); // 기존 데이터 제거
-                new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
+                setRefresh();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -380,6 +372,12 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(getApplicationContext(), "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT).show();
         } else if (System.currentTimeMillis() - time < 2000)
             super.onBackPressed();
+    }
+
+    public void setRefresh(){
+        currentPage = 0;
+        setLocalDataRemove(); // 기존 데이터 제거
+        new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
     }
 
     public void setLocalDataRemove() {
