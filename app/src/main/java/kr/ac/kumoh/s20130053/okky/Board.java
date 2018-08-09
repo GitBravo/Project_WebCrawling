@@ -35,15 +35,11 @@ import java.util.ArrayList;
 public class Board extends AppCompatActivity implements View.OnClickListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerViewAdapterForBoard mAdapter;
-    private LinearLayoutManager mLinearLayoutManager;
     private RecyclerViewEndlessScrollListener mScrollListener;
-    private RecyclerView mRecyclerView;
     private int currentPage;
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToggle;
-    private NavigationView navigationView;
-    private View navigationHeaderView;
 
     // Back 버튼 연속눌림 시간측정 변수
     private long time = 0;
@@ -117,7 +113,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mDate = new ArrayList<>();
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
-        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mAdapter = new RecyclerViewAdapterForBoard(this, mTitle, mCount, mDate, mId);
 
         // 스크롤 리스너 객체 생성 후 스크롤 리스너 등록
@@ -130,7 +126,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         };
 
         // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
-        mRecyclerView = findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -161,7 +157,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         }));
 
         // 네비게이션 뷰 초기화
-        navigationView = findViewById(R.id.navigationView);
+        NavigationView navigationView = findViewById(R.id.navigationView);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -256,9 +252,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 return false;
             }
         });
-
-        // 네비게이션 헤더뷰 초기화
-        navigationHeaderView = navigationView.getHeaderView(0);
 
         // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
