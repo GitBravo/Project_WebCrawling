@@ -61,13 +61,13 @@
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
 
-            <TextView
+            <org.sufficientlysecure.htmltextview.HtmlTextView
                 android:id="@+id/detail_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:autoLink="web|email"
-                android:textColor="@color/colorBlack"
+                android:textAppearance="@android:style/TextAppearance.Small"
                 android:textIsSelectable="true"
                 android:textSize="15sp" />
 

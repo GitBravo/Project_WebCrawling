@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.text.Spanned;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -17,6 +16,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.sufficientlysecure.htmltextview.HtmlHttpImageGetter;
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 public class Detail extends AppCompatActivity {
     private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits; // Board 에서 받아오는 데이터
 
-    private TextView mContent; // 글 내용
+    private HtmlTextView mContent; // 글 내용
     private ArrayList<String> commentNickname; // 덧글 게시자
     private ArrayList<String> commentDate; // 덧글 게시날짜
     private ArrayList<String> commentContent; // 덧글 내용
@@ -169,8 +170,7 @@ public class Detail extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
-            Spanned imageOnText = Html.fromHtml(tag); // ★★★★★★★★★★★★★★★★★★★★
-            activity.mContent.setText(imageOnText);  // 게시물 내용 View 에 출력
+            activity.mContent.setHtml(tag, new HtmlHttpImageGetter(activity.mContent, null, true));  // 게시물 내용 View 에 출력
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
 
