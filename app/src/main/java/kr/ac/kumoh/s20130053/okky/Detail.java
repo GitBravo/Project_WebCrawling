@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.Spanned;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -97,7 +98,7 @@ public class Detail extends AppCompatActivity {
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
         private WeakReference<Detail> mActivityReference;
-        private String content; // 게시글 내용
+        private String tag; // 게시글 내용
 
         JsoupAsyncTask(Detail context) {
             // 생성자
@@ -113,7 +114,7 @@ public class Detail extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             Detail activity = mActivityReference.get();
-            content = "";
+            tag = "";
             try {
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
@@ -131,7 +132,7 @@ public class Detail extends AppCompatActivity {
                 // 게시글 내용 파싱
                 Elements title = doc.select("article.content-text");
                 for (Element link : title) {
-                    content += link.html();
+                    tag += link.html();
                 }
 
                 // 덧글 게시자 파싱
@@ -167,15 +168,16 @@ public class Detail extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
-            Detail activity = mActivityReference.get(); // Activity 객체 획득
-            activity.mContent.setText(endBlankRemover(String.valueOf(Html.fromHtml(content)))); // 게시물 내용 View 에 출력
+            final Detail activity = mActivityReference.get(); // Activity 객체 획득
+            Spanned imageOnText = Html.fromHtml(tag); // ★★★★★★★★★★★★★★★★★★★★
+            activity.mContent.setText(imageOnText);  // 게시물 내용 View 에 출력
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
 
-        String endBlankRemover(String input){
+        String endBlankRemover(String input) {
             // 문자열 끝 부분의 공백 2개를 지워주는 메소드
-            if(input.length() > 2)
-                return input.substring(0, input.length()-2);
+            if (input.length() > 2)
+                return input.substring(0, input.length() - 2);
             else
                 return input;
         }
