@@ -68,7 +68,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawerlayout);
-
+        
         // 광고 객체 초기화
         MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
 

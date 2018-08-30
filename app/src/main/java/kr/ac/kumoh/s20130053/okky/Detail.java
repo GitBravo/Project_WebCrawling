@@ -2,11 +2,13 @@ package kr.ac.kumoh.s20130053.okky;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -34,6 +36,7 @@ public class Detail extends AppCompatActivity {
     private LinearLayoutManager mLinearLayoutManager;
     private RecyclerViewAdapterForDetail mAdapter;
     private RecyclerView mRecyclerView;
+    private NestedScrollView nestedScrollView;
 
     private AdView mAdView;
 
@@ -84,11 +87,19 @@ public class Detail extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
+        // 테스트..
+        nestedScrollView = findViewById(R.id.scrollview);
+        findViewById(R.id.detail_title).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nestedScrollView = findViewById(R.id.scrollview);
+                nestedScrollView.scrollTo(0,0);
+            }
+        });
+
         // 게시글 내용 및 덧글 로드
         new JsoupAsyncTask(this).execute();
-
     }
-
 
     private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
         /* Activity 클래스 하위에 존재하는 Non-static 내부 클래스는 Activity 클래스 보다

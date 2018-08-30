@@ -20,7 +20,7 @@
 
     <!-- 옵션 메뉴 -->
     <string name="AppVersion">앱 버전</string>
-    <string name="Version">1.4.0</string>
+    <string name="Version">1.4.1</string>
     <string name="Setting">설정</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-4355755954533542/8563884913</string>
