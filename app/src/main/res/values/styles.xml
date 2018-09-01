@@ -37,4 +37,9 @@
         -->
     </style>
 
+    <style name="BaseTheme.FULL_SCREEN">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 </resources>

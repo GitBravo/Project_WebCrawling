@@ -94,6 +94,8 @@ public class Detail extends AppCompatActivity {
             public void onClick(View v) {
                 nestedScrollView = findViewById(R.id.scrollview);
                 nestedScrollView.scrollTo(0,0);
+                nestedScrollView.smoothScrollTo(0,0);
+                // 이 부분 나중에 수정할 것..★
             }
         });
 

@@ -88,7 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false">
-                <!-- android:nestedScrollingEnabled="false" : 뷰 계층구조 내에 스크롤뷰가 있을 때도 스크롤 활성화 -->
+                <!-- android:nestedScrollingEnabled="false" : 뷰 계층구조 내에 스크롤을 갖는 뷰가 있을 때 스크롤 비활성화 -->
+                <!-- android:descendantFocusability="blocksDescendants" : 뷰 계층구조 내에 리사이클러뷰의 포커스 비활성화 -->
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
