@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,9 +32,7 @@ public class Detail extends AppCompatActivity {
     private ArrayList<String> commentDate; // 덧글 게시날짜
     private ArrayList<String> commentContent; // 덧글 내용
 
-    private LinearLayoutManager mLinearLayoutManager;
     private RecyclerViewAdapterForDetail mAdapter;
-    private RecyclerView mRecyclerView;
     private NestedScrollView nestedScrollView;
 
     @Override
@@ -65,7 +62,7 @@ public class Detail extends AppCompatActivity {
         tv = findViewById(R.id.detail_id);
         tv.setText(mId); // 게시자 닉네임
         tv = findViewById(R.id.detail_date);
-        tv.setText(mDate + "ㆍ" + mRecCount + "ㆍ" + mHits); // 게시 날짜
+        tv.setText(getString(R.string.CommitDate, mDate, mRecCount, mHits)); // 게시 날짜
 
         // 게시글 내용을 출력하기 위한 View
         mContent = findViewById(R.id.detail_content);
@@ -76,11 +73,11 @@ public class Detail extends AppCompatActivity {
         commentDate = new ArrayList<>();
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
-        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mAdapter = new RecyclerViewAdapterForDetail(this, commentNickname, commentDate, commentContent);
 
         // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
-        mRecyclerView = findViewById(R.id.detail_recyclerView);
+        RecyclerView mRecyclerView = findViewById(R.id.detail_recyclerView);
         mRecyclerView.setHasFixedSize(true); // 고정 크기 설정시 RecyclerView 의 성능을 개선할 수 있음
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -91,8 +88,8 @@ public class Detail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 nestedScrollView = findViewById(R.id.scrollview);
-                nestedScrollView.scrollTo(0,0);
-                nestedScrollView.smoothScrollTo(0,0);
+                nestedScrollView.scrollTo(0, 0);
+                nestedScrollView.smoothScrollTo(0, 0);
             }
         });
 
@@ -167,7 +164,7 @@ public class Detail extends AppCompatActivity {
                 // 덧글 내용 파싱
                 Elements comment = doc.select("article.list-group-item-text.note-text");
                 for (Element link : comment) {
-                    activity.commentContent.add(link.html());
+                    activity.commentContent.add(link.html()); // HTML 그대로 가져옴
                 }
 
             } catch (IOException e) {
