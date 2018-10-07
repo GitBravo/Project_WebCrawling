@@ -11,6 +11,10 @@
         android:roundIcon="@drawable/okky_icon"
         android:supportsRtl="true"
         android:theme="@style/BaseTheme">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-4355755954533542~2572341570"/>
+
 
         <!-- android:icon="@mipmap/ic_launcher" 기본 아이콘 -->
         <!-- android:roundIcon="@mipmap/ic_launcher_round" 라운드 아이콘 -->

@@ -38,15 +38,13 @@ public class Detail extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private NestedScrollView nestedScrollView;
 
-    private AdView mAdView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail);
 
         // 광고 객체 초기화
-        mAdView = findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -87,7 +85,7 @@ public class Detail extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        // 테스트..
+        // 게시물 제목 선택시 최상단 이동
         nestedScrollView = findViewById(R.id.scrollview);
         findViewById(R.id.detail_title).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +93,6 @@ public class Detail extends AppCompatActivity {
                 nestedScrollView = findViewById(R.id.scrollview);
                 nestedScrollView.scrollTo(0,0);
                 nestedScrollView.smoothScrollTo(0,0);
-                // 이 부분 나중에 수정할 것..★
             }
         });
 
@@ -170,7 +167,7 @@ public class Detail extends AppCompatActivity {
                 // 덧글 내용 파싱
                 Elements comment = doc.select("article.list-group-item-text.note-text");
                 for (Element link : comment) {
-                    activity.commentContent.add(endBlankRemover(String.valueOf(Html.fromHtml(link.html()))));
+                    activity.commentContent.add(link.html());
                 }
 
             } catch (IOException e) {
@@ -185,14 +182,6 @@ public class Detail extends AppCompatActivity {
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
             activity.mContent.setHtml(tag, new HtmlHttpImageGetter(activity.mContent, null, true));  // 게시물 내용 View 에 출력
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
-        }
-
-        String endBlankRemover(String input) {
-            // 문자열 끝 부분의 공백 2개를 지워주는 메소드
-            if (input.length() > 2)
-                return input.substring(0, input.length() - 2);
-            else
-                return input;
         }
     }
 }

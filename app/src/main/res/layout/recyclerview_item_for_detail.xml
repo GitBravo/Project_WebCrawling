@@ -36,13 +36,17 @@
 
     </LinearLayout>
 
-    <TextView
+    <org.sufficientlysecure.htmltextview.HtmlTextView
         android:id="@+id/detail_comment"
-        android:textColor="#000"
+        android:textColor="@color/colorBlack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:autoLink="web|email"
+        android:textAppearance="@android:style/TextAppearance.Small"
+        android:textIsSelectable="false"
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -3,11 +3,12 @@ package kr.ac.kumoh.s20130053.okky;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.util.ArrayList;
 
@@ -34,9 +35,9 @@ public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerV
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapterForDetail.ViewHolder holder, int position) {
-            holder.tvNickname.setText(mNickname.get(position)); // 덧글 아이디
-            holder.tvDate.setText(mDate.get(position)); // 덧글 게시날짜
-            holder.tvComment.setText(mComment.get(position)); // 덧글 내용
+        holder.tvNickname.setText(mNickname.get(position)); // 덧글 아이디
+        holder.tvDate.setText(mDate.get(position)); // 덧글 게시날짜
+        holder.tvComment.setHtml(mComment.get(position)); // 덧글 내용
     }
 
     @Override
@@ -45,7 +46,8 @@ public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerV
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvComment, tvDate, tvNickname;
+        HtmlTextView tvComment;
+        TextView tvDate, tvNickname;
 
         ViewHolder(View view) {
             super(view);
