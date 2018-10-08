@@ -44,7 +44,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:autoLink="web|email"
+        android:autoLink="web"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:textIsSelectable="false"
         android:textSize="15sp" />

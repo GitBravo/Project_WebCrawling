@@ -62,12 +62,12 @@
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
 
-            <org.sufficientlysecure.htmltextview.HtmlTextView
+            <kr.ac.kumoh.s20130053.okky.HTMLTextView
                 android:id="@+id/detail_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:autoLink="web|email"
+                android:autoLink="web"
                 android:textAppearance="@android:style/TextAppearance.Small"
                 android:textIsSelectable="true"
                 android:textSize="15sp" />
