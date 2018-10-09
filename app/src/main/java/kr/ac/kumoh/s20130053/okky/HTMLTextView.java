@@ -74,6 +74,14 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
             try {
                 InputStream is = new URL(source).openStream();
                 return BitmapFactory.decodeStream(is);
+                /*
+                * 4096x4096 사이즈 이상의 이미지는 너무 커서 OpenGL을 통한 텍스쳐로 로드되지 않는다.
+                * 그렇기 때문에 이미지를 리사이즈 해야하는데, 이 경우 이미지의 화질이 하락할 가능성이 있다.
+                *
+                * 반면에 Manifest 에서 OpenGL 의 하드웨어 가속을 꺼두면 4096 사이즈 이상의 이미지도 로드할 수 있다.
+                * 이 경우, 사용자의 데이터 소모량 증가 및 퍼포먼스 하락이 발생할 수 있다. (현재는 이 방법 사용)
+                * */
+//                return resizeBitmapImage(bitmap, 4096);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Log.d("에러", "파일못찾음");
@@ -96,16 +104,35 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
                 BitmapDrawable d = new BitmapDrawable(getContext().getResources(), bitmap);
 
                 mDrawable.addLevel(1, 1, d);
-                mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                mDrawable.setBounds(0, 0, getWidth(), (bitmap.getHeight() * getWidth())/bitmap.getWidth());
                 mDrawable.setLevel(1);
-
-                Log.d("에러", "가로_ " + String.valueOf(bitmap.getWidth()));
-                Log.d("에러", "세로_ " + String.valueOf(bitmap.getHeight()));
 
                 // 이미지 다운로드 완료 후, invalidate 의 개념으로, 다시한번 텍스트를 설정해준것이다. 더 좋은방법이 있을법도 하다
                 CharSequence t = getText();
                 setText(t);
             }
+        }
+
+        public Bitmap resizeBitmapImage(Bitmap source, int maxResolution) {
+            int width = source.getWidth();
+            int height = source.getHeight();
+            int newWidth = width;
+            int newHeight = height;
+            float rate = 0.0f;
+            if (width > height) {
+                if (maxResolution < width) {
+                    rate = maxResolution / (float) width;
+                    newHeight = (int) (height * rate);
+                    newWidth = maxResolution;
+                }
+            } else {
+                if (maxResolution < height) {
+                    rate = maxResolution / (float) height;
+                    newWidth = (int) (width * rate);
+                    newHeight = maxResolution;
+                }
+            }
+            return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
         }
     }
 }

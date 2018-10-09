@@ -30,7 +30,8 @@
 
         <activity
             android:name=".Detail"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="false" />
 
         <activity
             android:name=".SearchActivityOnKeyboard"
