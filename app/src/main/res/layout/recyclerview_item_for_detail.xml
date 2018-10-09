@@ -36,7 +36,7 @@
 
     </LinearLayout>
 
-    <org.sufficientlysecure.htmltextview.HtmlTextView
+    <kr.ac.kumoh.s20130053.okky.HTMLTextView
         android:id="@+id/detail_comment"
         android:textColor="@color/colorBlack"
         android:layout_width="match_parent"

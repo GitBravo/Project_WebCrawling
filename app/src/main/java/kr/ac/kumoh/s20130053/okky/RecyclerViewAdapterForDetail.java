@@ -37,7 +37,7 @@ public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(@NonNull RecyclerViewAdapterForDetail.ViewHolder holder, int position) {
         holder.tvNickname.setText(mNickname.get(position)); // 덧글 아이디
         holder.tvDate.setText(mDate.get(position)); // 덧글 게시날짜
-        holder.tvComment.setHtml(mComment.get(position)); // 덧글 내용
+        holder.tvComment.setHtmlText(mComment.get(position)); // 덧글 내용
     }
 
     @Override
@@ -46,7 +46,7 @@ public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerV
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        HtmlTextView tvComment;
+        HTMLTextView tvComment;
         TextView tvDate, tvNickname;
 
         ViewHolder(View view) {

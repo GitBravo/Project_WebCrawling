@@ -68,7 +68,7 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
             mDrawable = (LevelListDrawable) params[1];
 
             // OKKY 내부 서버저장 파일인 경우 경로를 https:// 로 바꿔준다
-            if (source.charAt(0) == '/' && source.charAt(1) == '/')
+            if (source != null && source.charAt(0) == '/' && source.charAt(1) == '/')
                 source = source.replace("//", "https://");
 
             try {
