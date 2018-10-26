@@ -60,7 +60,7 @@ public class Detail extends AppCompatActivity {
         tv = findViewById(R.id.detail_id);
         tv.setText(mId); // 게시자 닉네임
         tv = findViewById(R.id.detail_date);
-        tv.setText(getString(R.string.CommitDate, mDate, mRecCount, mHits)); // 게시 날짜
+        tv.setText(getString(R.string.ThreeString, mDate, mRecCount, mHits)); // 게시 날짜
 
         // 게시글 내용을 출력하기 위한 View
         mContent = findViewById(R.id.detail_content);
@@ -104,11 +104,12 @@ public class Detail extends AppCompatActivity {
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
         private WeakReference<Detail> mActivityReference;
-        private String tag; // 게시글 내용
+        private StringBuffer tag; // 게시글 내용
 
         JsoupAsyncTask(Detail context) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
+            tag = new StringBuffer();
         }
 
         @Override
@@ -120,7 +121,6 @@ public class Detail extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... params) {
             Detail activity = mActivityReference.get();
-            tag = "";
             try {
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
@@ -138,7 +138,7 @@ public class Detail extends AppCompatActivity {
                 // 게시글 내용 파싱
                 Elements title = doc.select("article.content-text");
                 for (Element link : title) {
-                    tag += link.html();
+                    tag.append(link.html());
                 }
 
                 // 덧글 게시자 파싱
@@ -174,7 +174,7 @@ public class Detail extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
-            activity.mContent.setHtmlText(tag);
+            activity.mContent.setHtmlText(tag.toString());
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
     }

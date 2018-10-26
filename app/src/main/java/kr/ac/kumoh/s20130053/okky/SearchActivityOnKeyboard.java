@@ -98,7 +98,8 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
     @Override
     protected void onStop() {
         // 홈버튼 누를 시 검색 액티비티 및 키보드 종료
-        softKeyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        if (getCurrentFocus() != null)
+            softKeyboard.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         finish();
         super.onStop();
     }

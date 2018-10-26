@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.sufficientlysecure.htmltextview.HtmlTextView;
-
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterForDetail extends RecyclerView.Adapter<RecyclerViewAdapterForDetail.ViewHolder> {

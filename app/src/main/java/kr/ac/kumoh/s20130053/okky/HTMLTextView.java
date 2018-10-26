@@ -49,7 +49,8 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
         // 이미지 다운로드 전, 임시 이미지 출력
         Drawable loading = ContextCompat.getDrawable(getContext(), R.drawable.loading);
         list_d.addLevel(0, 0, loading);
-        list_d.setBounds(0, 0, loading.getIntrinsicWidth(), loading.getIntrinsicHeight());
+        if (loading != null)
+            list_d.setBounds(0, 0, loading.getIntrinsicWidth(), loading.getIntrinsicHeight());
 
         new LoadImage().execute(source, list_d);
         return list_d;
@@ -113,26 +114,26 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
             }
         }
 
-        public Bitmap resizeBitmapImage(Bitmap source, int maxResolution) {
-            int width = source.getWidth();
-            int height = source.getHeight();
-            int newWidth = width;
-            int newHeight = height;
-            float rate = 0.0f;
-            if (width > height) {
-                if (maxResolution < width) {
-                    rate = maxResolution / (float) width;
-                    newHeight = (int) (height * rate);
-                    newWidth = maxResolution;
-                }
-            } else {
-                if (maxResolution < height) {
-                    rate = maxResolution / (float) height;
-                    newWidth = (int) (width * rate);
-                    newHeight = maxResolution;
-                }
-            }
-            return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
-        }
+//        public Bitmap resizeBitmapImage(Bitmap source, int maxResolution) {
+//            int width = source.getWidth();
+//            int height = source.getHeight();
+//            int newWidth = width;
+//            int newHeight = height;
+//            float rate = 0.0f;
+//            if (width > height) {
+//                if (maxResolution < width) {
+//                    rate = maxResolution / (float) width;
+//                    newHeight = (int) (height * rate);
+//                    newWidth = maxResolution;
+//                }
+//            } else {
+//                if (maxResolution < height) {
+//                    rate = maxResolution / (float) height;
+//                    newWidth = (int) (width * rate);
+//                    newHeight = maxResolution;
+//                }
+//            }
+//            return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
+//        }
     }
 }

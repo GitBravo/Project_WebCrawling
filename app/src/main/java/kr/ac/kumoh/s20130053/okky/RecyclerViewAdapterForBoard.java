@@ -44,10 +44,10 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
         holder.mTitle.setText(mArray.get(position)); // 제목
         if (isQNA){
             holder.mComment.setText(mComCount.get(2*position+1)); // 덧글수
-            holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(2*position)); // 게시날짜ㆍ추천수
+            holder.mDate.setText(mContext.getString(R.string.TwoString, mDate.get(position), mComCount.get(2*position))); // 게시날짜ㆍ추천수
         }else{
             holder.mComment.setText(mComCount.get(3*position)); // 덧글수
-            holder.mDate.setText(mDate.get(position) + "ㆍ" + mComCount.get(3*position+1) + "ㆍ" + mComCount.get(3*position+2)); // 게시날짜ㆍ추천수ㆍ조회수
+            holder.mDate.setText(mContext.getString(R.string.ThreeString, mDate.get(position), mComCount.get(3*position+1), mComCount.get(3*position+2))); // 게시날짜ㆍ추천수ㆍ조회수
         }
         holder.mAccount.setText(mId.get(position)); // 아이디
     }

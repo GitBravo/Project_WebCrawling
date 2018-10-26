@@ -95,7 +95,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
         // ActionBar 대신 ToolBar 적용
         setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolBar_board));
-        getSupportActionBar().setTitle(boardTitle);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(boardTitle);
 
         // 드로워레이아웃 및 토글버튼 초기화 코드
         mDrawerLayout = findViewById(R.id.drawerLayout);
@@ -539,9 +540,9 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
             // 백그라운드 작업 진행 후 실행될 작업
             Board activity = mActivityReference.get(); // Activity 객체 획득
             activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
-            if (activity.isSearchComplete)
+            if (activity.isSearchComplete && activity.getSupportActionBar() != null)
                 activity.getSupportActionBar().setTitle(activity.boardTitle + activity.searchKeyword);
-            else
+            else if (!activity.isSearchComplete && activity.getSupportActionBar() != null)
                 activity.getSupportActionBar().setTitle(activity.boardTitle);
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
             activity.mScrollListener.resetState(); // 스크롤바 위치 재조정
