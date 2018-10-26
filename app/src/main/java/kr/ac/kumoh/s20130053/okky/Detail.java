@@ -164,7 +164,7 @@ public class Detail extends AppCompatActivity {
                 for (Element link : comment) {
                     activity.commentContent.add(link.html()); // HTML 그대로 가져옴
                 }
-            } catch (IOException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
             return null;
