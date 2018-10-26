@@ -68,8 +68,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawerlayout);
-        
-        // 광고 객체 초기화
+
+        // 애드몹 광고 객체 초기화
         MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
 
         // Board 의 하단 버튼 5개 리스너 부착
@@ -367,7 +367,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
             super.onBackPressed();
     }
 
-    public void setRefresh(){
+    public void setRefresh() {
         currentPage = 0;
         setLocalDataRemove(); // 기존 데이터 제거
         new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신

@@ -12,21 +12,29 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class SearchActivityOnKeyboard extends AppCompatActivity implements View.OnClickListener{
+import com.google.firebase.analytics.FirebaseAnalytics;
+
+public class SearchActivityOnKeyboard extends AppCompatActivity implements View.OnClickListener {
     private InputMethodManager softKeyboard;
     private String mKeyword;
     private EditText mEditText;
-    private Button mButton;
+
+    // 파이어베이스 애널리틱스
+    public static FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_activity_on_keyboard);
 
+        // 파이어베이스 애널리틱스 객체 초기화
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
         // 기본값 초기화
         this.mKeyword = "";
 
         mEditText = findViewById(R.id.search_editText);
-        mButton = findViewById(R.id.search_button);
+        Button mButton = findViewById(R.id.search_button);
         mButton.setOnClickListener(this);
 
         // 키보드 자동 활성화
@@ -40,21 +48,29 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.background :
+        switch (view.getId()) {
+            case R.id.background:
                 softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 finish();
                 break;
-            case R.id.search_button :
+            case R.id.search_button:
                 mKeyword = mEditText.getText().toString();
-                if (mKeyword.equals("") || mKeyword == null)
+                if (mKeyword.equals(""))
                     Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
                 else {
+                    // Board 액티비티로 결과값 전송
                     Intent intent = new Intent();
                     intent.putExtra("searchKeyword", getSearchKeyword());
                     intent.putExtra("query", getQuery());
                     setResult(Activity.RESULT_OK, intent);
                     softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+                    // 파이어베이스 애널리틱스로 검색어 통계 전송
+                    Bundle bundle = new Bundle();
+                    bundle.putString("Sentence", mKeyword);
+                    mFirebaseAnalytics.logEvent("Keyword", bundle);
+
+                    //액티비티 종료
                     finish();
                 }
                 break;

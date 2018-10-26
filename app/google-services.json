@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "216058468585-edpsqinnfj38tb40kph398f08bbjuln4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.ac.kumoh.s20130053.okky",
+            "certificate_hash": "c5d70978d0f444ab6627d77039899703e0ce40b5"
+          }
+        },
+        {
+          "client_id": "216058468585-od0cc1r8480ou8inoci7d9ftjvvffh36.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.ac.kumoh.s20130053.okky",
+            "certificate_hash": "910eee85f9bdd30808dd09edb49abea5ac11d3b5"
+          }
+        },
+        {
           "client_id": "216058468585-br8u3dpijf9p41e41725mhof5e6p0695.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -48,7 +64,8 @@
         "ads_service": {
           "status": 2
         }
-      }
+      },
+      "admob_app_id": "ca-app-pub-4355755954533542~2572341570"
     }
   ],
   "configuration_version": "1"
