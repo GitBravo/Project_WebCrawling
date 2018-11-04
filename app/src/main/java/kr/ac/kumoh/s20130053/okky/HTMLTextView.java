@@ -30,10 +30,16 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
      * @param source HTML 형식의 문자열
      */
     public void setHtmlText(String source) {
-
         Spanned spanned = Html.fromHtml(source, this, null);    // Html.ImageGetter 를 여기다 구현해놨다.
+        spanned = deleteWhiteSpace(spanned);
         this.setText(spanned);
+    }
 
+    // 문장 마지막에 endLine 공백이 있다면 제거하는 메소드
+    private Spanned deleteWhiteSpace(Spanned sp) {
+        if (sp.charAt(sp.length()-1) == '\n')
+            return (Spanned) sp.subSequence(0, sp.length() - 2);
+        return sp;
     }
 
     /**
