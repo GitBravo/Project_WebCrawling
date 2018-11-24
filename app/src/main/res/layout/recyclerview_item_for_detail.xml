@@ -47,6 +47,6 @@
         android:autoLink="web"
         android:textAppearance="@android:style/TextAppearance.Small"
         android:textIsSelectable="false"
-        android:textSize="15sp" />
+        android:textSize="14sp" />
 
 </LinearLayout>

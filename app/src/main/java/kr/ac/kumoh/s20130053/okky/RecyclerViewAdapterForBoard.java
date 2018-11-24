@@ -42,14 +42,32 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mTitle.setText(mArray.get(position)); // 제목
-        if (isQNA){
-            holder.mComment.setText(mComCount.get(2*position+1)); // 덧글수
-            holder.mDate.setText(mContext.getString(R.string.TwoString, mDate.get(position), mComCount.get(2*position))); // 게시날짜ㆍ추천수
-        }else{
-            holder.mComment.setText(mComCount.get(3*position)); // 덧글수
-            holder.mDate.setText(mContext.getString(R.string.ThreeString, mDate.get(position), mComCount.get(3*position+1), mComCount.get(3*position+2))); // 게시날짜ㆍ추천수ㆍ조회수
+        if (isQNA) {
+            holder.mComment.setText(mComCount.get(2 * position + 1)); // 덧글수
+            holder.mDate.setText(mContext.getString(R.string.TwoString, mDate.get(position), mComCount.get(2 * position))); // 게시날짜ㆍ추천수
+        } else {
+            holder.mComment.setText(mComCount.get(3 * position)); // 덧글수
+            holder.mDate.setText(mContext.getString(R.string.ThreeString, mDate.get(position), mComCount.get(3 * position + 1), mComCount.get(3 * position + 2))); // 게시날짜ㆍ추천수ㆍ조회수
         }
         holder.mAccount.setText(mId.get(position)); // 아이디
+
+        commentController(holder);
+    }
+
+    private void commentController(@NonNull ViewHolder holder){
+        // 댓글 개수에 따라 색상을 동적으로 조정하는 메소드
+        if (Integer.valueOf(holder.mComment.getText().toString()) == 0)
+            holder.mComment.setVisibility(View.INVISIBLE); // 댓글 없을 시 표시안함
+        else if (Integer.valueOf(holder.mComment.getText().toString()) < 10){
+            holder.mComment.setVisibility(View.VISIBLE);
+            holder.mComment.setBackgroundResource(R.drawable.commnetbackground_1);
+        }else if(Integer.valueOf(holder.mComment.getText().toString()) < 50) {
+            holder.mComment.setVisibility(View.VISIBLE);
+            holder.mComment.setBackgroundResource(R.drawable.commnetbackground_2);
+        }else {
+            holder.mComment.setVisibility(View.VISIBLE);
+            holder.mComment.setBackgroundResource(R.drawable.commnetbackground_3);
+        }
     }
 
     @Override
