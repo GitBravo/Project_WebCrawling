@@ -374,7 +374,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         else if (System.currentTimeMillis() - time >= 2000) {
             // Back 버튼 연속 2회 눌러야 종료되도록 설정
             time = System.currentTimeMillis();
-            Toasty.Config.getInstance().setWarningColor(getResources().getColor(R.color.colorYellow)).apply();
+            Toasty.Config.getInstance().setWarningColor(getResources().getColor(R.color.colorGray)).apply();
             Toasty.warning(getApplicationContext(), "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT, true).show();
         } else if (System.currentTimeMillis() - time < 2000)
             super.onBackPressed();
