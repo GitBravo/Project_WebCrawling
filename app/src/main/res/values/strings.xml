@@ -23,7 +23,9 @@
     <!-- 옵션 메뉴 -->
     <string name="Setting">설정</string>
     <string name="AppVersion">앱 버전</string>
-    <string name="Version">1.6.0</string>
+    <string name="Version">1.7.0</string>
+    <string name="Privacy">기록</string>
+    <string name="Privacy_content">내가 읽은 글 기록 초기화</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-4355755954533542/8563884913</string>
     <!-- TEST UNIT_ID : ca-app-pub-3940256099942544/6300978111 -->

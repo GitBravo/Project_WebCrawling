@@ -18,17 +18,24 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
     private ArrayList<String> mComCount;
     private ArrayList<String> mDate;
     private ArrayList<String> mId;
+    private ArrayList<String> mTitle_Href;
+    private Personal mPersonal;
 
     RecyclerViewAdapterForBoard(Context context,
                                 ArrayList<String> title,
                                 ArrayList<String> comCount,
                                 ArrayList<String> date,
-                                ArrayList<String> id) {
+                                ArrayList<String> id,
+                                ArrayList<String> href) {
         this.mContext = context;
         this.mArray = title;
         this.mComCount = comCount;
         this.mDate = date;
         this.mId = id;
+        this.mTitle_Href = href;
+
+        // SharedPreferences 객체 초기화
+        mPersonal = new Personal(this.mContext);
     }
 
     @NonNull
@@ -51,11 +58,11 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
         }
         holder.mAccount.setText(mId.get(position)); // 아이디
 
-        commentController(holder);
+        commentController(holder, position);
     }
 
-    private void commentController(@NonNull ViewHolder holder){
-        // 댓글 개수에 따라 색상을 동적으로 조정하는 메소드
+    private void commentController(@NonNull ViewHolder holder, int position){
+        // 댓글 개수에 따라 색상을 동적으로 조정하는 부분
         if (Integer.valueOf(holder.mComment.getText().toString()) == 0)
             holder.mComment.setVisibility(View.INVISIBLE); // 댓글 없을 시 표시안함
         else if (Integer.valueOf(holder.mComment.getText().toString()) < 10){
@@ -67,6 +74,21 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
         }else {
             holder.mComment.setVisibility(View.VISIBLE);
             holder.mComment.setBackgroundResource(R.drawable.commnetbackground_3);
+        }
+
+        // 이미 읽은 게시글일때 폰트 색상 회색으로 조정
+        if (mPersonal.isAlreadyRead(this.mTitle_Href.get(position))) {
+            holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.colorGray));
+            holder.mComment.setBackgroundResource(R.drawable.commnetbackground_0);
+            holder.mComment.setTextColor(mContext.getResources().getColor(R.color.colorGray));
+            // 이미 읽었으면서 100개 이상의 댓글이 있는 경우 폰트 재조정
+            if (Integer.valueOf(holder.mComment.getText().toString()) >= 100)
+                holder.mComment.setTextSize(10);
+        }
+        else {
+            holder.mTitle.setTextColor(mContext.getResources().getColor(R.color.colorBlack));
+            holder.mComment.setTextColor(mContext.getResources().getColor(R.color.colorWrite));
+            holder.mComment.setTextSize(12);
         }
     }
 

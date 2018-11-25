@@ -32,6 +32,8 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 public class Board extends AppCompatActivity implements View.OnClickListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerViewAdapterForBoard mAdapter;
@@ -63,6 +65,9 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     private Button bottomBtn3;
     private Button bottomBtn4;
     private Button bottomBtn5;
+
+    // SharedPreferences 객체 선언
+    private Personal personal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +120,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new RecyclerViewAdapterForBoard(this, mTitle, mCount, mDate, mId);
+        mAdapter = new RecyclerViewAdapterForBoard(this, mTitle, mCount, mDate, mId, mTitle_Href);
 
         // 스크롤 리스너 객체 생성 후 스크롤 리스너 등록
         mScrollListener = new RecyclerViewEndlessScrollListener(mLinearLayoutManager) {
@@ -135,7 +140,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mRecyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // 아이템 클릭 시 액션
+                // 이하 아이템 클릭 시 액션
                 Intent intent = new Intent(Board.this, Detail.class);
                 intent.putExtra("mTitle", mTitle.get(position)); // 글제목
                 intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글주소
@@ -148,6 +153,12 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                     intent.putExtra("mRecCount", mCount.get(3 * position + 1)); // 추천수
                     intent.putExtra("mHits", mCount.get(3 * position + 2)); // 조회수
                 }
+
+                // SharedPreferences 객체를 사용하여 읽음 표시
+                personal = new Personal(getApplicationContext());
+                personal.saveAlreadyRead(mTitle_Href.get(position));
+
+                // Detail 액티비티 시작
                 startActivity(intent);
             }
 
@@ -363,7 +374,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         else if (System.currentTimeMillis() - time >= 2000) {
             // Back 버튼 연속 2회 눌러야 종료되도록 설정
             time = System.currentTimeMillis();
-            Toast.makeText(getApplicationContext(), "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT).show();
+            Toasty.Config.getInstance().setWarningColor(getResources().getColor(R.color.colorYellow)).apply();
+            Toasty.warning(getApplicationContext(), "한번 더 누르면 종료합니다", Toast.LENGTH_SHORT, true).show();
         } else if (System.currentTimeMillis() - time < 2000)
             super.onBackPressed();
     }
@@ -381,6 +393,13 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mId.clear();
         mActPoint.clear();
         mDate.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // onResume 상태로 복귀할 때마다 게시글 읽었음을 표시하기 위해 notifyDataSetChanged() 호출
         mAdapter.notifyDataSetChanged();
     }
 

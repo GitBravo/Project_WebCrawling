@@ -4,7 +4,7 @@
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorYellow</item>
         <item name="android:textColor">@color/colorBlack</item> <!-- 기본 텍스트 색상 -->
         <item name="android:itemBackground">@color/colorWrite</item> <!-- 아이템 배경 색상 -->
     </style>

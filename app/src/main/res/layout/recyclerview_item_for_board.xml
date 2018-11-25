@@ -23,8 +23,8 @@
 
         <TextView
             android:id="@+id/TextView_commentItem"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:layout_weight="0"
             android:textColor="@color/colorWrite"
             android:textSize="12sp"
