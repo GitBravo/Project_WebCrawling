@@ -9,7 +9,7 @@ import static android.content.Context.MODE_PRIVATE;
 // SharedPreferences() 클래스를 이용해 개인 식별정보를 저장 및 획득
 
 // 사용예시1. 게시물을 읽었는지 아닌지 파악 가능
-// 사용예시2. 개인별 옵션 설정 저장가능
+// 사용예시2. 개인별 옵션 설정 저장가능(미구현)
 
 public class Personal {
     private Context mContext;
@@ -21,7 +21,7 @@ public class Personal {
     }
 
     // 게시글 이미 읽었는지에 대한 정보 저장하기
-    public void saveAlreadyRead(String address){
+    public void setAlreadyRead(String address){
         pref = mContext.getSharedPreferences("AlreadyRead", MODE_PRIVATE);
         editor = pref.edit();
         /* 키 = 게시글 주소
@@ -37,7 +37,7 @@ public class Personal {
     }
 
     // 값(ALL Data) 삭제하기
-    public void removeAlreadyRead(){
+    public void removeAllAlreadyRead(){
         pref = mContext.getSharedPreferences("AlreadyRead", MODE_PRIVATE);
         editor = pref.edit();
         editor.clear();

@@ -49,7 +49,7 @@ public class OptionMenuSetting extends AppCompatActivity {
                 // 이하 아이템 클릭 시 액션
                 if (position == 1) {
                     // 두 번째 아이템 선택
-                    new Personal(getApplicationContext()).removeAlreadyRead();
+                    new Personal(getApplicationContext()).removeAllAlreadyRead();
                     Toasty.Config.getInstance().setSuccessColor(getResources().getColor(R.color.colorPrimary)).apply();
                     Toasty.success(OptionMenuSetting.this, "초기화 완료", Toast.LENGTH_SHORT, true).show();
                 }

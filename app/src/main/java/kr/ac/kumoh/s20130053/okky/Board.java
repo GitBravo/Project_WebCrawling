@@ -52,8 +52,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     // Q&A 게시판인지 여부 판단 변수
     public static boolean isQNA;
 
-    // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 활동점수, 게시시간
-    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mActPoint, mDate;
+    // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 게시시간, 아이디 주소
+    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mDate;
 
     // 검색 액티비티 결과값 저장 변수
     private boolean isSearchComplete;
@@ -115,7 +115,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mTitle_Href = new ArrayList<>();
         mCount = new ArrayList<>();
         mId = new ArrayList<>();
-        mActPoint = new ArrayList<>();
         mDate = new ArrayList<>();
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
@@ -156,7 +155,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
                 // SharedPreferences 객체를 사용하여 읽음 표시
                 personal = new Personal(getApplicationContext());
-                personal.saveAlreadyRead(mTitle_Href.get(position));
+                personal.setAlreadyRead(mTitle_Href.get(position));
 
                 // Detail 액티비티 시작
                 startActivity(intent);
@@ -391,7 +390,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mTitle_Href.clear();
         mCount.clear();
         mId.clear();
-        mActPoint.clear();
         mDate.clear();
         mAdapter.notifyDataSetChanged();
     }
@@ -516,20 +514,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                     if (boardCount > 20)
                         break;
                     activity.mId.add(link.text().trim());
-                    boardCount++;
-                }
-
-                // 활동점수
-                Elements actPoint = doc.select("#list-article > " +
-                        ".panel.panel-default " +
-                        ".list-group " +
-                        ".avatar-info " +
-                        ".activity");
-                boardCount = 1;
-                for (Element link : actPoint) {
-                    if (boardCount > 20)
-                        break;
-                    activity.mActPoint.add(link.text().trim());
                     boardCount++;
                 }
 
