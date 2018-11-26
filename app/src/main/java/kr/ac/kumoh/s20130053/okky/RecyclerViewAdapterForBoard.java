@@ -57,7 +57,6 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
             holder.mDate.setText(mContext.getString(R.string.ThreeString, mDate.get(position), mComCount.get(3 * position + 1), mComCount.get(3 * position + 2))); // 게시날짜ㆍ추천수ㆍ조회수
         }
         holder.mAccount.setText(mId.get(position)); // 아이디
-
         commentController(holder, position);
     }
 

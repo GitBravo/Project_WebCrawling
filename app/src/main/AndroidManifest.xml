@@ -7,14 +7,13 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/okky_icon"
-        android:roundIcon="@drawable/okky_roundicon"
         android:label="@string/app_name"
+        android:roundIcon="@drawable/okky_roundicon"
         android:supportsRtl="true"
         android:theme="@style/BaseTheme">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4355755954533542~2572341570"/>
-
+            android:value="ca-app-pub-4355755954533542~2572341570" />
 
         <!-- android:icon="@mipmap/ic_launcher" 기본 아이콘 -->
         <!-- android:roundIcon="@mipmap/ic_launcher_round" 라운드 아이콘 -->
@@ -24,24 +23,26 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
+
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Detail"
-            android:screenOrientation="portrait"
-            android:hardwareAccelerated="false" />
-
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".SearchActivityOnKeyboard"
             android:theme="@style/TransparentDisplay" />
-
         <activity
             android:name=".OptionMenuSetting"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".UserInfo"
+            android:label="@string/title_activity_user_info"
+            android:theme="@style/BaseTheme"/>
     </application>
 
 </manifest>

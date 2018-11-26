@@ -22,16 +22,20 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-public class Detail extends AppCompatActivity {
-    private String mTitle, mTitle_Href, mId, mDate, mRecCount, mHits; // Board 에서 받아오는 데이터
+public class Detail extends AppCompatActivity implements View.OnClickListener {
+    private String mTitle, mTitle_Href, mId, mId_Href, mDate, mRecCount, mHits; // Board 에서 받아오는 데이터
 
-    private HTMLTextView mContent; // 글 내용
     private ArrayList<String> commentNickname; // 덧글 게시자
     private ArrayList<String> commentDate; // 덧글 게시날짜
     private ArrayList<String> commentContent; // 덧글 내용
 
     private RecyclerViewAdapterForDetail mAdapter;
     private NestedScrollView nestedScrollView;
+
+    private TextView tvTitle;
+    private TextView tvId;
+    private TextView tvDate;
+    private HTMLTextView tvContent; // 글 내용
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +52,24 @@ public class Detail extends AppCompatActivity {
         mTitle = intent.getStringExtra("mTitle");
         mTitle_Href = intent.getStringExtra("mTitle_Href");
         mId = intent.getStringExtra("mId");
+        mId_Href = intent.getStringExtra("mId_Href");
         mDate = intent.getStringExtra("mDate");
         mRecCount = intent.getStringExtra("mRecCount");
         mHits = intent.getStringExtra("mHits");
 
-        // 게시물 제목 설정
-        TextView tv = findViewById(R.id.detail_title);
-        tv.setText(mTitle);
+        // 텍스트뷰 선언 및 할당
+        tvTitle = findViewById(R.id.detail_title);
+        tvId = findViewById(R.id.detail_id);
+        tvDate = findViewById(R.id.detail_date);
+        tvContent = findViewById(R.id.detail_content);
 
-        // 메타정보(게시자, 게시날짜)를 담기위한 TextView 선언 및 출력
-        tv = findViewById(R.id.detail_id);
-        tv.setText(mId); // 게시자 닉네임
-        tv = findViewById(R.id.detail_date);
-        tv.setText(getString(R.string.ThreeString, mDate, mRecCount, mHits)); // 게시 날짜
+        // 리스너 부착
+        tvId.setOnClickListener(this);
 
-        // 게시글 내용을 출력하기 위한 View
-        mContent = findViewById(R.id.detail_content);
+        // 게시물 제목, 메타정보(게시자, 게시날짜)를 담기위한 TextView 출력
+        tvTitle.setText(mTitle);
+        tvId.setText(mId); // 게시자 닉네임
+        tvDate.setText(getString(R.string.ThreeString, mDate, mRecCount, mHits)); // 게시 날짜
 
         // 덧글 내용을 담기위한 객체 선언
         commentContent = new ArrayList<>();
@@ -93,6 +99,15 @@ public class Detail extends AppCompatActivity {
 
         // 게시글 내용 및 덧글 로드
         new JsoupAsyncTask(this).execute();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.detail_id :
+                startActivity(new Intent(this, UserInfo.class));
+                break;
+        }
     }
 
     private static class JsoupAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -174,7 +189,7 @@ public class Detail extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
-            activity.mContent.setHtmlText(tag.toString());
+            activity.tvContent.setHtmlText(tag.toString());
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
     }
