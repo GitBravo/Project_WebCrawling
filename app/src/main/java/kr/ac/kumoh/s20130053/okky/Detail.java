@@ -105,10 +105,12 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.detail_id :
-                Intent intent = new Intent(this, UserInfo.class);
-                intent.putExtra("url", mId_Href);
-                intent.putExtra("userName", mId);
-                startActivity(intent);
+                if (!mId_Href.equals("")) {
+                    Intent intent = new Intent(this, UserInfo.class);
+                    intent.putExtra("url", mId_Href);
+                    intent.putExtra("userName", mId);
+                    startActivity(intent);
+                }
                 break;
         }
     }
