@@ -21,6 +21,16 @@
         <item name="colorControlHighlight">@color/colorPrimaryDark</item>
     </style>
 
+    <style name="UserInfoStyle_fixed" parent="Theme.AppCompat">
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+    <style name="UserInfoStyle_value" parent="Theme.AppCompat">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/colorGray</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="TransparentDisplay" parent="@style/Theme.AppCompat">
         <!-- 투명 디스플레이 스타일 -->
         <item name="windowNoTitle">true</item>

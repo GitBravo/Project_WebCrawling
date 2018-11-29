@@ -3,6 +3,7 @@ package kr.ac.kumoh.s20130053.okky;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
@@ -18,6 +19,7 @@ import android.util.Log;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -37,7 +39,7 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
 
     // 문장 마지막에 endLine 공백이 있다면 제거하는 메소드
     private Spanned deleteWhiteSpace(Spanned sp) {
-        if (sp.charAt(sp.length()-1) == '\n')
+        if (sp.charAt(sp.length() - 1) == '\n')
             return (Spanned) sp.subSequence(0, sp.length() - 2);
         return sp;
     }
@@ -58,16 +60,21 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
         if (loading != null)
             list_d.setBounds(0, 0, loading.getIntrinsicWidth(), loading.getIntrinsicHeight());
 
-        new LoadImage().execute(source, list_d);
+        new LoadImage(this).execute(source, list_d);
         return list_d;
     }
 
     /**
      * 실제 온라인에서 이미지를 다운로드 받을 AsyncTask
      */
-    class LoadImage extends AsyncTask<Object, Void, Bitmap> {
+    static class LoadImage extends AsyncTask<Object, Void, Bitmap> {
 
         private LevelListDrawable mDrawable;
+        private WeakReference<HTMLTextView> mWeakRefView;
+
+        LoadImage(HTMLTextView view) {
+            this.mWeakRefView = new WeakReference<>(view);
+        }
 
         @Override
         protected Bitmap doInBackground(Object... params) {
@@ -78,9 +85,16 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
             if (source != null && source.charAt(0) == '/' && source.charAt(1) == '/')
                 source = source.replace("//", "https://");
 
+            // Bitmap 을 생성하고 관리하는 BitmapFactory 는 Decode 메소드 decodeFile, decodeResouce, decodeStream 가 존재한다.
+            // 이때, 원본이 큰 이미지를 그대로 decode 하게 되면 메모리를 왕창 먹어서 앱이 죽을 수 있다. (OutOfMemory : OOM)
+            // 따라서 decode 하는 시점에서 이미지를 원하는 만큼 줄여서 불러오는 것이 좋다.
             try {
                 InputStream is = new URL(source).openStream();
-                return BitmapFactory.decodeStream(is);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.RGB_565; // 색상 구성표를 변경하여 메모리 사용 감소
+//                options.inSampleSize = 1; // 표시되는 이미지 리사이징을 통해서 메모리 사용 감소 (주의 : 로드되는 데이터 자체는 차이없음. 단지 표시되는 사이즈만 줄어듦)
+                return BitmapFactory.decodeStream(is, null, options);
+
                 /*
                  * 4096x4096 사이즈 이상의 이미지는 너무 커서 OpenGL을 통한 텍스쳐로 로드되지 않는다.
                  * 그렇기 때문에 이미지를 리사이즈 해야하는데, 이 경우 이미지의 화질이 하락할 가능성이 있다.
@@ -107,18 +121,21 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
          */
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
-                BitmapDrawable d = new BitmapDrawable(getContext().getResources(), bitmap);
+            HTMLTextView HTMLTextView = mWeakRefView.get();
+
+            if (bitmap != null && HTMLTextView != null) {
+                BitmapDrawable d = new BitmapDrawable(HTMLTextView.getResources(), bitmap);
 
                 mDrawable.addLevel(1, 1, d);
-                mDrawable.setBounds(0, 0, getWidth(), (bitmap.getHeight() * getWidth()) / bitmap.getWidth());
+                mDrawable.setBounds(0, 0, HTMLTextView.getWidth(), (bitmap.getHeight() * HTMLTextView.getWidth()) / bitmap.getWidth());
                 mDrawable.setLevel(1);
 
                 // 이미지 다운로드 완료 후, invalidate 의 개념으로, 다시한번 텍스트를 설정해준것이다. 더 좋은방법이 있을법도 하다
-                CharSequence t = getText();
-                setText(t);
+                CharSequence t = HTMLTextView.getText();
+                HTMLTextView.setText(t);
             }
         }
+
 
 //        public Bitmap resizeBitmapImage(Bitmap source, int maxResolution) {
 //            int width = source.getWidth();

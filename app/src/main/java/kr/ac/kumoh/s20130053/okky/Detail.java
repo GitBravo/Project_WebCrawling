@@ -105,7 +105,10 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.detail_id :
-                startActivity(new Intent(this, UserInfo.class));
+                Intent intent = new Intent(this, UserInfo.class);
+                intent.putExtra("url", mId_Href);
+                intent.putExtra("userName", mId);
+                startActivity(intent);
                 break;
         }
     }
@@ -189,7 +192,8 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
-            activity.tvContent.setHtmlText(tag.toString());
+            if (activity.tvContent != null)
+                activity.tvContent.setHtmlText(tag.toString());
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
     }

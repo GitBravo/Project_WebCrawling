@@ -42,7 +42,8 @@
         <activity
             android:name=".UserInfo"
             android:label="@string/title_activity_user_info"
-            android:theme="@style/BaseTheme"/>
+            android:theme="@style/BaseTheme"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
