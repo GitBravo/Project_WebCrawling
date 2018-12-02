@@ -7,6 +7,7 @@
     <color name="colorBlack">#000</color>
     <color name="colorWrite">#FFF</color>
     <color name="colorGray">#848484</color>
+    <color name="colorDarkGray">#4d4d4d</color>
     <color name="transparent">#00000000</color> <!-- 투명도 -->
     <!--
     투명도

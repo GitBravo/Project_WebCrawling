@@ -62,12 +62,20 @@
                 android:theme="@style/UserInfoStyle_value"/>
         </LinearLayout>
 
-        <View
-            android:id="@+id/top_divider"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="?android:attr/listDivider" />
+            android:layout_height="wrap_content"
+            android:text="@string/UserInfo_activity"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="6dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/UserInfo_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

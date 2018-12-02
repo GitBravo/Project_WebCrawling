@@ -4,19 +4,28 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 public class UserInfo extends AppCompatActivity {
-    String mUrl;
-    String mUserName;
+    private String mUrl;
+    private String mUserName;
+    private ArrayList<String> mActivity;
+    private ArrayList<String> mTitle;
+
+    private RecyclerViewAdapterForUserInfo mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +34,7 @@ public class UserInfo extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Detail 액티비티로부터 url 주소, 유저이름 받아옴
+        // Detail 액티비티로부터 url 주소, 유저이름 받아와서 툴바 타이틀 변경
         Intent intent = getIntent();
         mUrl = intent.getStringExtra("url");
         mUserName = intent.getStringExtra("userName");
@@ -35,7 +44,29 @@ public class UserInfo extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        new UserInfoAsyncTask(this).execute(mUrl);
+        mActivity = new ArrayList<>();
+        mTitle = new ArrayList<>();
+
+        // 리사이클러뷰 객체 할당 및 어댑터 부착
+        mAdapter = new RecyclerViewAdapterForUserInfo(this, mActivity, mTitle);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        RecyclerView mRecyclerView = findViewById(R.id.UserInfo_recyclerView);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mRecyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
+        mAdapter.notifyDataSetChanged();
+
+        new UserInfoAsyncTask(this, mActivity, mTitle).execute(mUrl);
     }
 
     @Override
@@ -50,19 +81,23 @@ public class UserInfo extends AppCompatActivity {
         private String mUserPoint; // 활동점수
         private String mUserFollowing; // 팔로잉
         private String mUserFollower; // 팔로워
+        private ArrayList<String> mActivity;
+        private ArrayList<String> mTitle;
 
-
-        UserInfoAsyncTask(UserInfo context) {
+        UserInfoAsyncTask(UserInfo context, ArrayList<String> activity, ArrayList<String> title) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
             mUserPoint = null;
             mUserFollowing = null;
             mUserFollower = null;
+            mActivity = activity;
+            mTitle = title;
         }
 
         @Override
         protected Void doInBackground(Object... params) {
             String url = (String) params[0];
+            int count;
             try {
                 /* div.className : 클래스명 className 만 가져오기
                  * div#id : 아이디명 id 만 가져오기
@@ -89,6 +124,28 @@ public class UserInfo extends AppCompatActivity {
                 elements = doc.select("#user > div.panel.panel-default > div > div.user-info.col-sm-9 > div.user-points > div:nth-child(3) > div.user-point-num > a");
                 mUserFollower = elements.text();
 
+                // 최근 활동 가져오기
+                doc = Jsoup.connect(url + "/articles").get();
+                elements = doc.select(".list-activity-desc-text");
+                count = 1;
+                for (Element link : elements) {
+                    if (count > 20)
+                        break;
+                    mActivity.add(link.text());
+                    count++;
+                }
+
+                // 최근 게시글 제목 가져오기
+                doc = Jsoup.connect(url + "/articles").get();
+                elements = doc.select(".list-group-item-heading > a");
+                count = 1;
+                for (Element link : elements) {
+                    if (count > 20)
+                        break;
+                    mTitle.add(link.text());
+                    count++;
+                }
+
             } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
@@ -105,6 +162,8 @@ public class UserInfo extends AppCompatActivity {
             tv.setText(mUserFollowing);
             tv = activity.findViewById(R.id.UserInfo_follower);
             tv.setText(mUserFollower);
+
+            activity.mAdapter.notifyDataSetChanged();
         }
     }
 }

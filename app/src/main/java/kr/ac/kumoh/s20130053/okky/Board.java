@@ -547,7 +547,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                     activity.mDate.add(link.text().trim());
                     boardCount++;
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

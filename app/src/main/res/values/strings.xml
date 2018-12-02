@@ -14,6 +14,9 @@
     <string name="btn_scrapCount">스크랩순</string>
     <string name="btn_viewCount">조회순</string>
 
+    <!-- 에러 표시(미사용) -->
+    <string name="err_post">표시할 수 없습니다</string>
+
     <!-- 옵션 메뉴 -->
     <string name="Setting">설정</string>
     <string name="AppVersion">앱 버전</string>
@@ -29,6 +32,7 @@
     <string name="UserInfo_point">활동점수</string>
     <string name="UserInfo_following">팔로잉</string>
     <string name="UserInfo_follower">팔로워</string>
+    <string name="UserInfo_activity">최근 게시물</string>
     <!-- TEST UNIT_ID : ca-app-pub-3940256099942544/6300978111 -->
     <!-- MY UNIT_ID : ca-app-pub-4355755954533542/8563884913 -->
 </resources>
