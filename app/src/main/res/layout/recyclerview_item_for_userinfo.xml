@@ -4,9 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginLeft="5dp"
-    android:layout_marginRight="5dp">
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp">
 
     <TextView
         android:id="@+id/UserInfo_recyclerView_activity"
@@ -20,7 +20,7 @@
         android:id="@+id/UserInfo_recyclerView_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorDarkGray"
+        android:textColor="@color/colorBlack"
         android:textSize="13sp"
         android:gravity="start"
         android:layout_marginBottom="5dp"/>

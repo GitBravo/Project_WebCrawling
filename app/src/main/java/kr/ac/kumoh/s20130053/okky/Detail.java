@@ -49,13 +49,13 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
 
         // Board 액티비티로부터 현재 게시글 데이터 수신
         Intent intent = getIntent();
-        mTitle = intent.getStringExtra("mTitle");
+        mTitle = intent.getStringExtra("mTitle"); // 제거
         mTitle_Href = intent.getStringExtra("mTitle_Href");
-        mId = intent.getStringExtra("mId");
-        mId_Href = intent.getStringExtra("mId_Href");
-        mDate = intent.getStringExtra("mDate");
-        mRecCount = intent.getStringExtra("mRecCount");
-        mHits = intent.getStringExtra("mHits");
+        mId = intent.getStringExtra("mId"); // 제거
+        mId_Href = intent.getStringExtra("mId_Href"); // 제거
+        mDate = intent.getStringExtra("mDate"); // 제거
+        mRecCount = intent.getStringExtra("mRecCount"); // 제거
+        mHits = intent.getStringExtra("mHits"); // 제거
 
         // 텍스트뷰 선언 및 할당
         tvTitle = findViewById(R.id.detail_title);

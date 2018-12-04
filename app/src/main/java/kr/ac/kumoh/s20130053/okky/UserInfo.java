@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -57,7 +58,7 @@ public class UserInfo extends AppCompatActivity {
         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mRecyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                // ★★이 부분은 반드시 리팩토링 해줘야 함★★
             }
             @Override
             public void onLongItemClick(View view, int position) {
@@ -136,13 +137,22 @@ public class UserInfo extends AppCompatActivity {
                 }
 
                 // 최근 게시글 제목 가져오기
-                doc = Jsoup.connect(url + "/articles").get();
                 elements = doc.select(".list-group-item-heading > a");
                 count = 1;
                 for (Element link : elements) {
                     if (count > 20)
                         break;
                     mTitle.add(link.text());
+                    count++;
+                }
+
+                // 최근 게시글 날짜 가져오기
+                elements = doc.select(".timeago");
+                count = 1;
+                for (Element link : elements) {
+                    if (count > 20)
+                        break;
+                    mActivity.set(count-1, mActivity.get(count-1) + " / " + link.text());
                     count++;
                 }
 

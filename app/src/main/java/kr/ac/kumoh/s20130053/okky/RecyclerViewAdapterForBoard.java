@@ -66,6 +66,9 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
             holder.mComment.setVisibility(View.INVISIBLE); // 댓글 없을 시 표시안함
         else if (Integer.valueOf(holder.mComment.getText().toString()) < 10){
             holder.mComment.setVisibility(View.VISIBLE);
+            holder.mComment.setBackgroundResource(R.drawable.commnetbackground_4);
+        }else if(Integer.valueOf(holder.mComment.getText().toString()) < 25) {
+            holder.mComment.setVisibility(View.VISIBLE);
             holder.mComment.setBackgroundResource(R.drawable.commnetbackground_1);
         }else if(Integer.valueOf(holder.mComment.getText().toString()) < 50) {
             holder.mComment.setVisibility(View.VISIBLE);
