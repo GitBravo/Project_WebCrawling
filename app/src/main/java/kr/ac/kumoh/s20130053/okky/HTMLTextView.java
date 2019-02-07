@@ -39,7 +39,7 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
 
     // 문장 마지막에 endLine 공백이 있다면 제거하는 메소드
     private Spanned deleteWhiteSpace(Spanned sp) {
-        if (sp.charAt(sp.length() - 1) == '\n')
+        if (sp.length() != 0 && sp.charAt(sp.length() - 1) == '\n')
             return (Spanned) sp.subSequence(0, sp.length() - 2);
         return sp;
     }

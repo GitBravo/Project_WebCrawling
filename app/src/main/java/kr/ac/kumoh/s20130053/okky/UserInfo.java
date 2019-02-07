@@ -21,10 +21,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class UserInfo extends AppCompatActivity {
-    private String mUrl;
-    private String mUserName;
-    private ArrayList<String> mActivity;
-    private ArrayList<String> mTitle;
+    String mUrl, mNickname;
+    ArrayList<String> mActivity;
+    ArrayList<String> mTitle, mTitleHref;
 
     private RecyclerViewAdapterForUserInfo mAdapter;
 
@@ -35,18 +34,20 @@ public class UserInfo extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Detail 액티비티로부터 url 주소, 유저이름 받아와서 툴바 타이틀 변경
         Intent intent = getIntent();
+        mNickname = intent.getStringExtra("nickname");
         mUrl = intent.getStringExtra("url");
-        mUserName = intent.getStringExtra("userName");
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(mUserName);
+            getSupportActionBar().setTitle(mNickname);
             getSupportActionBar().setHomeAsUpIndicator(R.drawable.baseline_arrow_back_24); // SupportActionBar 에 Back 버튼 추가
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
+        Log.d("태그", mUrl);
+
         mActivity = new ArrayList<>();
         mTitle = new ArrayList<>();
+        mTitleHref = new ArrayList<>();
 
         // 리사이클러뷰 객체 할당 및 어댑터 부착
         mAdapter = new RecyclerViewAdapterForUserInfo(this, mActivity, mTitle);
@@ -58,7 +59,11 @@ public class UserInfo extends AppCompatActivity {
         mRecyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this, mRecyclerView, new RecyclerViewItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // ★★이 부분은 반드시 리팩토링 해줘야 함★★
+                // 이하 아이템 클릭 시 액션
+                Intent intent = new Intent(UserInfo.this, Detail.class);
+                intent.putExtra("mTitle_Href", mTitleHref.get(position)); // 글 주소
+                startActivity(intent);
+                finish();
             }
             @Override
             public void onLongItemClick(View view, int position) {
@@ -67,7 +72,7 @@ public class UserInfo extends AppCompatActivity {
         }));
         mAdapter.notifyDataSetChanged();
 
-        new UserInfoAsyncTask(this, mActivity, mTitle).execute(mUrl);
+        new UserInfoAsyncTask(this, mActivity, mTitle, mTitleHref).execute(mUrl);
     }
 
     @Override
@@ -83,16 +88,14 @@ public class UserInfo extends AppCompatActivity {
         private String mUserFollowing; // 팔로잉
         private String mUserFollower; // 팔로워
         private ArrayList<String> mActivity;
-        private ArrayList<String> mTitle;
+        private ArrayList<String> mTitle, mTitleHref;
 
-        UserInfoAsyncTask(UserInfo context, ArrayList<String> activity, ArrayList<String> title) {
+        UserInfoAsyncTask(UserInfo context, ArrayList<String> activity, ArrayList<String> title, ArrayList<String> href) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
-            mUserPoint = null;
-            mUserFollowing = null;
-            mUserFollower = null;
             mActivity = activity;
             mTitle = title;
+            mTitleHref = href;
         }
 
         @Override
@@ -153,6 +156,16 @@ public class UserInfo extends AppCompatActivity {
                     if (count > 20)
                         break;
                     mActivity.set(count-1, mActivity.get(count-1) + " / " + link.text());
+                    count++;
+                }
+
+                // 최근 게시글 링크 가져오기
+                elements = doc.select("h5.list-group-item-heading > a");
+                count = 1;
+                for (Element link : elements) {
+                    if (count > 20)
+                        break;
+                    mTitleHref.add(link.attr("abs:href"));
                     count++;
                 }
 

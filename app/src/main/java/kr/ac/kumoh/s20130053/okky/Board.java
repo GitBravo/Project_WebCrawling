@@ -53,7 +53,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     public static boolean isQNA;
 
     // 게시글 제목, 게시글 주소, (덧글수, 추천수, 조회수), 아이디, 게시시간, 아이디 주소
-    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mDate, mId_Href;
+    private ArrayList<String> mTitle, mTitle_Href, mCount, mId, mDate;
 
     // 검색 액티비티 결과값 저장 변수
     private boolean isSearchComplete;
@@ -116,7 +116,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mCount = new ArrayList<>();
         mId = new ArrayList<>();
         mDate = new ArrayList<>();
-        mId_Href = new ArrayList<>();
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -142,18 +141,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
             public void onItemClick(View view, int position) {
                 // 이하 아이템 클릭 시 액션
                 Intent intent = new Intent(Board.this, Detail.class);
-                intent.putExtra("mTitle", mTitle.get(position)); // 글제목
-                intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글주소
-                intent.putExtra("mId", mId.get(position)); // 아이디
-                intent.putExtra("mId_Href", mId_Href.get(position)); // 아이디 주소
-                intent.putExtra("mDate", mDate.get(position)); // 게시날짜
-                if (isQNA) {
-                    intent.putExtra("mRecCount", mCount.get(2 * position)); // 추천수
-                    intent.putExtra("mHits", mCount.get(2 * position + 1)); // 조회수
-                } else {
-                    intent.putExtra("mRecCount", mCount.get(3 * position + 1)); // 추천수
-                    intent.putExtra("mHits", mCount.get(3 * position + 2)); // 조회수
-                }
+                intent.putExtra("mTitle_Href", mTitle_Href.get(position)); // 글 주소
 
                 // SharedPreferences 객체를 사용하여 읽음 표시
                 personal = new Personal(getApplicationContext());
@@ -392,7 +380,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mTitle_Href.clear();
         mCount.clear();
         mId.clear();
-        mId_Href.clear();
         mDate.clear();
         mAdapter.notifyDataSetChanged();
     }
@@ -516,20 +503,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                     if (boardCount > 20)
                         break;
                     activity.mId.add(link.text().trim());
-                    boardCount++;
-                }
-
-                // 유저정보주소
-                Elements info_href = doc.select("#list-article > " +
-                        "div.panel.panel-default " +
-                        ".list-group-item-author.clearfix " +
-                        ".nickname");
-                boardCount = 1;
-                for (Element link : info_href) {
-                    if (boardCount > 20)
-                        break;
-                    // Href 값을 추출할 수 없으면 "" 문자열이 추출됨. null 아니니 주의할 것!!
-                    activity.mId_Href.add(link.attr("abs:href"));
                     boardCount++;
                 }
 

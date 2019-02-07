@@ -23,7 +23,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class Detail extends AppCompatActivity implements View.OnClickListener {
-    private String mTitle, mTitle_Href, mId, mId_Href, mDate, mRecCount, mHits; // Board 에서 받아오는 데이터
+    // Board 및 UserInfo 에서 받아오는 데이터
+    private String mTitle_Href;
+    private String mNickname;
+    private String mNickname_Href;
 
     private ArrayList<String> commentNickname; // 덧글 게시자
     private ArrayList<String> commentDate; // 덧글 게시날짜
@@ -47,15 +50,9 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        // Board 액티비티로부터 현재 게시글 데이터 수신
+        // 이전 액티비티로부터 현재 게시글 데이터 수신
         Intent intent = getIntent();
-        mTitle = intent.getStringExtra("mTitle"); // 제거
         mTitle_Href = intent.getStringExtra("mTitle_Href");
-        mId = intent.getStringExtra("mId"); // 제거
-        mId_Href = intent.getStringExtra("mId_Href"); // 제거
-        mDate = intent.getStringExtra("mDate"); // 제거
-        mRecCount = intent.getStringExtra("mRecCount"); // 제거
-        mHits = intent.getStringExtra("mHits"); // 제거
 
         // 텍스트뷰 선언 및 할당
         tvTitle = findViewById(R.id.detail_title);
@@ -65,11 +62,6 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
 
         // 리스너 부착
         tvId.setOnClickListener(this);
-
-        // 게시물 제목, 메타정보(게시자, 게시날짜)를 담기위한 TextView 출력
-        tvTitle.setText(mTitle);
-        tvId.setText(mId); // 게시자 닉네임
-        tvDate.setText(getString(R.string.ThreeString, mDate, mRecCount, mHits)); // 게시 날짜
 
         // 덧글 내용을 담기위한 객체 선언
         commentContent = new ArrayList<>();
@@ -105,10 +97,10 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.detail_id :
-                if (!mId_Href.equals("")) {
+                if (!mNickname_Href.equals("")) {
                     Intent intent = new Intent(this, UserInfo.class);
-                    intent.putExtra("url", mId_Href);
-                    intent.putExtra("userName", mId);
+                    intent.putExtra("nickname", mNickname);
+                    intent.putExtra("url", mNickname_Href);
                     startActivity(intent);
                 }
                 break;
@@ -124,12 +116,18 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
         private WeakReference<Detail> mActivityReference;
-        private StringBuffer tag; // 게시글 내용
+        private String asyncTitle; // 제목
+        private String asyncId; // 아이디
+        private String asyncDate; // 날짜, 시간
+        private String asyncRecCount;// 추천
+        private String asyncHits;// 조회
+        private String asyncHref;// 아이디링크
+        private StringBuffer asyncContent; // 내용
 
         JsoupAsyncTask(Detail context) {
             // 생성자
             mActivityReference = new WeakReference<>(context);
-            tag = new StringBuffer();
+            asyncContent = new StringBuffer();
         }
 
         @Override
@@ -155,10 +153,39 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
 
                 Document doc = Jsoup.connect(activity.mTitle_Href).get(); // 타겟 페이지 URL
 
+                /* 여기부터 리팩토링 부분 */
+
+                // 제목 파싱
+                Elements title = doc.select("#content-body > h2");
+                asyncTitle = title.text();
+
+                // 아이디 파싱
+                Elements id = doc.select("div.panel-heading.clearfix " +
+                        "div.avatar-info .nickname");
+                asyncId = id.text();
+
+                // 날짜 파싱
+                Elements date = doc.select("div.panel-heading.clearfix div.date-created > span.timeago");
+                asyncDate = date.text();
+
+                // 추천수 파싱
+                Elements recCount = doc.select("#content-function div.content-eval-count");
+                asyncRecCount = recCount.text();
+
+                // 조회수 파싱
+                Elements hits = doc.select("#article > div.panel.panel-default.clearfix.fa- > div.panel-heading.clearfix > div.content-identity.pull-right > div:nth-child(2)");
+                asyncHits = hits.text();
+
+                // 아이디 링크 파싱
+                Elements href = doc.select("div.panel-heading.clearfix div.avatar-info > .nickname");
+                asyncHref = href.attr("abs:href");
+
+                /* 여기까지 리팩토링 부분 */
+
                 // 게시글 내용 파싱
-                Elements title = doc.select("article.content-text");
-                for (Element link : title) {
-                    tag.append(link.html());
+                Elements content = doc.select("article.content-text");
+                for (Element link : content) {
+                    asyncContent.append(link.html());
                 }
 
                 // 덧글 게시자 파싱
@@ -194,8 +221,14 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
-            if (activity.tvContent != null)
-                activity.tvContent.setHtmlText(tag.toString());
+            if (activity.tvContent != null | activity.tvTitle != null | activity.tvId != null | activity.tvDate != null) {
+                activity.tvContent.setHtmlText(asyncContent.toString());
+                activity.tvTitle.setText(asyncTitle);
+                activity.tvId.setText(asyncId);
+                activity.tvDate.setText(activity.getString(R.string.ThreeString, asyncDate, asyncRecCount, asyncHits)); // 게시 날짜
+            }
+            activity.mNickname = asyncId;
+            activity.mNickname_Href = asyncHref;
             activity.mAdapter.notifyDataSetChanged(); // 각 덧글 데이터 출력
         }
     }
