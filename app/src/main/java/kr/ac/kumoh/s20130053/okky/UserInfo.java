@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -26,6 +25,7 @@ public class UserInfo extends AppCompatActivity {
     ArrayList<String> mTitle, mTitleHref;
 
     private RecyclerViewAdapterForUserInfo mAdapter;
+    private Personal personal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +43,6 @@ public class UserInfo extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        Log.d("태그", mUrl);
-
         mActivity = new ArrayList<>();
         mTitle = new ArrayList<>();
         mTitleHref = new ArrayList<>();
@@ -61,7 +59,12 @@ public class UserInfo extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 // 이하 아이템 클릭 시 액션
                 Intent intent = new Intent(UserInfo.this, Detail.class);
-                intent.putExtra("mTitle_Href", mTitleHref.get(position)); // 글 주소
+                intent.putExtra("mTitle_Href", mTitleHref.get(position));
+
+                // SharedPreferences 객체를 사용하여 읽음 표시
+                personal = new Personal(getApplicationContext());
+                personal.setAlreadyRead(mTitleHref.get(position));
+
                 startActivity(intent);
                 finish();
             }

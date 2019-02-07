@@ -23,7 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class Detail extends AppCompatActivity implements View.OnClickListener {
-    // Board 및 UserInfo 에서 받아오는 데이터
+    // 이전 액티비티에서 받아오는 데이터 3개
     private String mTitle_Href;
     private String mNickname;
     private String mNickname_Href;
@@ -31,6 +31,7 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
     private ArrayList<String> commentNickname; // 덧글 게시자
     private ArrayList<String> commentDate; // 덧글 게시날짜
     private ArrayList<String> commentContent; // 덧글 내용
+    private ArrayList<String> commentHref; // 덧글 게시자주소
 
     private RecyclerViewAdapterForDetail mAdapter;
     private NestedScrollView nestedScrollView;
@@ -67,10 +68,11 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
         commentContent = new ArrayList<>();
         commentNickname = new ArrayList<>();
         commentDate = new ArrayList<>();
+        commentHref = new ArrayList<>();
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new RecyclerViewAdapterForDetail(this, commentNickname, commentDate, commentContent);
+        mAdapter = new RecyclerViewAdapterForDetail(this, commentNickname, commentDate, commentContent, commentHref);
 
         // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
         RecyclerView mRecyclerView = findViewById(R.id.detail_recyclerView);
@@ -153,8 +155,6 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
 
                 Document doc = Jsoup.connect(activity.mTitle_Href).get(); // 타겟 페이지 URL
 
-                /* 여기부터 리팩토링 부분 */
-
                 // 제목 파싱
                 Elements title = doc.select("#content-body > h2");
                 asyncTitle = title.text();
@@ -180,8 +180,6 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
                 Elements href = doc.select("div.panel-heading.clearfix div.avatar-info > .nickname");
                 asyncHref = href.attr("abs:href");
 
-                /* 여기까지 리팩토링 부분 */
-
                 // 게시글 내용 파싱
                 Elements content = doc.select("article.content-text");
                 for (Element link : content) {
@@ -195,6 +193,13 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
                         ".nickname");
                 for (Element link : comment_nick) {
                     activity.commentNickname.add(link.text());
+                }
+
+                // 덧글 게시자 주소 파싱
+                Elements comment_nickHref = doc.select(".list-group div.avatar.avatar-medium.clearfix " +
+                        "div.avatar-info .nickname");
+                for (Element link : comment_nickHref) {
+                    activity.commentHref.add(link.attr("abs:href"));
                 }
 
                 // 덧글 게시날짜 파싱
