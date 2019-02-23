@@ -6,15 +6,19 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-public class SearchActivityOnKeyboard extends AppCompatActivity implements View.OnClickListener {
+import es.dmoral.toasty.Toasty;
+
+public class SearchActivityOnKeyboard extends AppCompatActivity implements View.OnClickListener, TextView.OnEditorActionListener {
     private InputMethodManager softKeyboard;
     private String mKeyword;
     private EditText mEditText;
@@ -34,8 +38,8 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
         this.mKeyword = "";
 
         mEditText = findViewById(R.id.search_editText);
-        Button mButton = findViewById(R.id.search_button);
-        mButton.setOnClickListener(this);
+        mEditText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        mEditText.setOnEditorActionListener(this);
 
         // 키보드 자동 활성화
         softKeyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -53,28 +57,34 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
                 softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 finish();
                 break;
-            case R.id.search_button:
-                mKeyword = mEditText.getText().toString();
-                if (mKeyword.equals(""))
-                    Toast.makeText(this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
-                else {
-                    // Board 액티비티로 결과값 전송
-                    Intent intent = new Intent();
-                    intent.putExtra("searchKeyword", getSearchKeyword());
-                    intent.putExtra("query", getQuery());
-                    setResult(Activity.RESULT_OK, intent);
-                    softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-
-                    // 파이어베이스 애널리틱스로 검색어 통계 전송
-                    Bundle bundle = new Bundle();
-                    bundle.putString("Sentence", mKeyword);
-                    mFirebaseAnalytics.logEvent("Keyword", bundle);
-
-                    //액티비티 종료
-                    finish();
-                }
-                break;
         }
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            mKeyword = mEditText.getText().toString();
+            if (mKeyword.equals(""))            if (mKeyword.equals("")) {
+                Toasty.Config.getInstance().setWarningColor(getResources().getColor(R.color.colorGray)).apply();
+                Toasty.warning(getApplicationContext(), "검색어를 입력하세요", Toast.LENGTH_SHORT, true).show();
+            }  else {
+                // Board 액티비티로 결과값 전송
+                Intent intent = new Intent();
+                intent.putExtra("searchKeyword", getSearchKeyword());
+                intent.putExtra("query", getQuery());
+                setResult(Activity.RESULT_OK, intent);
+                softKeyboard.hideSoftInputFromWindow(v.getWindowToken(), 0); // 키보드 내리기
+                // 파이어베이스 애널리틱스로 검색어 통계 전송
+                Bundle bundle = new Bundle();
+                bundle.putString("Sentence", mKeyword);
+                mFirebaseAnalytics.logEvent("Keyword", bundle);
+
+                //액티비티 종료
+                finish();
+            }
+            return true;
+        } else
+            return false;
     }
 
     public String getSearchKeyword() {
