@@ -64,7 +64,7 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_DONE || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
             mKeyword = mEditText.getText().toString();
-            if (mKeyword.equals(""))            if (mKeyword.equals("")) {
+            if (mKeyword.equals("")) {
                 Toasty.Config.getInstance().setWarningColor(getResources().getColor(R.color.colorGray)).apply();
                 Toasty.warning(getApplicationContext(), "검색어를 입력하세요", Toast.LENGTH_SHORT, true).show();
             }  else {
