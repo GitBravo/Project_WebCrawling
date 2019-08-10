@@ -4,21 +4,29 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
@@ -38,6 +46,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerViewAdapterForBoard mAdapter;
     private RecyclerViewEndlessScrollListener mScrollListener;
+    private RecyclerView mRecyclerView;
     private int currentPage;
 
     private DrawerLayout mDrawerLayout;
@@ -99,7 +108,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         isSearchComplete = false; // 검색 여부
 
         // ActionBar 대신 ToolBar 적용
-        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolBar_board));
+        setSupportActionBar((androidx.appcompat.widget.Toolbar) findViewById(R.id.toolBar_board));
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(boardTitle);
 
@@ -118,7 +127,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mDate = new ArrayList<>();
 
         // 리니어레이아웃 매니저, 리사이클러뷰 아답터 객체 생성
-        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mAdapter = new RecyclerViewAdapterForBoard(this, mTitle, mCount, mDate, mId, mTitle_Href);
 
         // 스크롤 리스너 객체 생성 후 스크롤 리스너 등록
@@ -131,7 +140,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         };
 
         // 리사이클러뷰 객체 선언 후 위에서 선언한 매니저, 아답터 부착
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerView);
+        mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
@@ -537,6 +546,17 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 activity.getSupportActionBar().setTitle(activity.boardTitle);
             activity.mSwipeRefreshLayout.setRefreshing(false); // 리프레쉬 아이콘 제거
             activity.mScrollListener.resetState(); // 스크롤바 위치 재조정
+
+            // 데이터가 없으면 에러표시
+            if (activity.mAdapter.getItemCount() == 0) {
+                activity.mRecyclerView.setVisibility(View.GONE);
+                TextView tv = activity.findViewById(R.id.err_text);
+                tv.setVisibility(View.VISIBLE);
+            }else{
+                activity.mRecyclerView.setVisibility(View.VISIBLE);
+                TextView tv = activity.findViewById(R.id.err_text);
+                tv.setVisibility(View.GONE);
+            }
         }
     }
 }

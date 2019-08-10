@@ -15,7 +15,7 @@
         android:padding="6dp"
         android:textColor="@color/colorWrite" />
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
@@ -83,14 +83,14 @@
                 ads:adUnitId="@string/banner_ad_unit_id">
             </com.google.android.gms.ads.AdView>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/detail_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false">
                 <!-- android:nestedScrollingEnabled="false" : 뷰 계층구조 내에 스크롤을 갖는 뷰가 있을 때 스크롤 비활성화 -->
                 <!-- android:descendantFocusability="blocksDescendants" : 뷰 계층구조 내에 리사이클러뷰의 포커스 비활성화 -->
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

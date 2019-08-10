@@ -1,10 +1,10 @@
 package kr.ac.kumoh.s20130053.okky;
 
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,7 +19,7 @@ public class OptionMenuSetting extends AppCompatActivity {
         setContentView(R.layout.option_menu_setting);
 
         // ActionBar 대신 ToolBar 적용 후 타이틀 설정
-        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.OptionMenu_toolbar));
+        setSupportActionBar((androidx.appcompat.widget.Toolbar) findViewById(R.id.OptionMenu_toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(R.string.Setting);
