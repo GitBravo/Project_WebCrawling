@@ -20,7 +20,6 @@ import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -265,7 +264,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
         // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
-        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.refreshIcon);
+        mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackground);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -284,6 +284,9 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.bottomBtn1:
                 sort = "id";
+                getApplication().setTheme(R.style.GrayTheme);
+                setContentView(R.layout.detail);
+
                 bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);

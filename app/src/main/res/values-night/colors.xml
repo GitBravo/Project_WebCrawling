@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#1976D2</color>
-    <color name="colorPrimaryDark">#1565C0</color>
-    <color name="colorYellow">#FF9C00</color>
+    <color name="colorPrimary">#848484</color>
+    <color name="colorPrimaryDark">#4d4d4d</color>
+    <color name="colorYellow">#4d4d4d</color>
     <color name="colorRed">#E20000</color>
-    <color name="colorBlack">#000</color>
+    <color name="colorBlack">#FFF</color>
     <color name="colorWrite">#FFF</color>
     <color name="colorGray">#848484</color>
     <color name="colorDarkGray">#4d4d4d</color>
-    <color name="colorBackground">#FFF</color>
-    <color name="refreshIcon">#1976D2</color>
+    <color name="colorBackground">#4d4d4d</color>
+    <color name="refreshIcon">#FFF</color>
     <color name="transparent">#00000000</color> <!-- 투명도 -->
     <!--
     투명도
