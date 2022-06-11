@@ -52,11 +52,9 @@ public class SearchActivityOnKeyboard extends AppCompatActivity implements View.
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.background:
-                softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                finish();
-                break;
+        if (view.getId() == R.id.background) {
+            softKeyboard.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            finish();
         }
     }
 

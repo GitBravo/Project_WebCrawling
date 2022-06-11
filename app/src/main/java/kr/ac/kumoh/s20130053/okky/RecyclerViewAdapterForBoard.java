@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import static kr.ac.kumoh.s20130053.okky.Board.isQNA;
 
 public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerViewAdapterForBoard.ViewHolder> {
-    private Context mContext;
-    private ArrayList<String> mArray;
-    private ArrayList<String> mComCount;
-    private ArrayList<String> mDate;
-    private ArrayList<String> mId;
-    private ArrayList<String> mTitle_Href;
-    private Personal mPersonal;
+    private final Context mContext;
+    private final ArrayList<String> mArray;
+    private final ArrayList<String> mComCount;
+    private final ArrayList<String> mDate;
+    private final ArrayList<String> mId;
+    private final ArrayList<String> mTitle_Href;
+    private final Personal mPersonal;
 
     RecyclerViewAdapterForBoard(Context context,
                                 ArrayList<String> title,
@@ -62,15 +62,15 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
 
     private void commentController(@NonNull ViewHolder holder, int position){
         // 댓글 개수에 따라 색상을 동적으로 조정하는 부분
-        if (Integer.valueOf(holder.mComment.getText().toString()) == 0)
+        if (Integer.parseInt(holder.mComment.getText().toString()) == 0)
             holder.mComment.setVisibility(View.INVISIBLE); // 댓글 없을 시 표시안함
-        else if (Integer.valueOf(holder.mComment.getText().toString()) < 10){
+        else if (Integer.parseInt(holder.mComment.getText().toString()) < 10){
             holder.mComment.setVisibility(View.VISIBLE);
             holder.mComment.setBackgroundResource(R.drawable.commnetbackground_4);
-        }else if(Integer.valueOf(holder.mComment.getText().toString()) < 25) {
+        }else if(Integer.parseInt(holder.mComment.getText().toString()) < 25) {
             holder.mComment.setVisibility(View.VISIBLE);
             holder.mComment.setBackgroundResource(R.drawable.commnetbackground_1);
-        }else if(Integer.valueOf(holder.mComment.getText().toString()) < 50) {
+        }else if(Integer.parseInt(holder.mComment.getText().toString()) < 50) {
             holder.mComment.setVisibility(View.VISIBLE);
             holder.mComment.setBackgroundResource(R.drawable.commnetbackground_2);
         }else {
@@ -84,7 +84,7 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
             holder.mComment.setBackgroundResource(R.drawable.commnetbackground_0);
             holder.mComment.setTextColor(mContext.getResources().getColor(R.color.colorGray));
             // 이미 읽었으면서 100개 이상의 댓글이 있는 경우 폰트 재조정
-            if (Integer.valueOf(holder.mComment.getText().toString()) >= 100)
+            if (Integer.parseInt(holder.mComment.getText().toString()) >= 100)
                 holder.mComment.setTextSize(10);
         }
         else {
@@ -99,7 +99,7 @@ public class RecyclerViewAdapterForBoard extends RecyclerView.Adapter<RecyclerVi
         return mArray.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView mTitle, mComment, mDate, mAccount;
 
         ViewHolder(View view) {

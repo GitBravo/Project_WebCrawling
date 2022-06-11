@@ -11,9 +11,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterForOption extends RecyclerView.Adapter<RecyclerViewAdapterForOption.ViewHolder> {
-    private Context mContext;
-    private ArrayList<String> mTitle;
-    private ArrayList<String> mContent;
+    private final Context mContext;
+    private final ArrayList<String> mTitle;
+    private final ArrayList<String> mContent;
 
     RecyclerViewAdapterForOption(Context context, ArrayList<String> title, ArrayList<String> content) {
         this.mContext = context;
@@ -26,7 +26,7 @@ public class RecyclerViewAdapterForOption extends RecyclerView.Adapter<RecyclerV
     public RecyclerViewAdapterForOption.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 새로운 뷰 생성
         View view = LayoutInflater.from(mContext).inflate(R.layout.recyclerview_item_for_optionmenu, parent, false);
-        return new RecyclerViewAdapterForOption.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RecyclerViewAdapterForOption extends RecyclerView.Adapter<RecyclerV
         return mTitle.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvContent;
 
         ViewHolder(View view) {

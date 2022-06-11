@@ -8,25 +8,25 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class RecyclerViewItemClickListener implements RecyclerView.OnItemTouchListener {
-    private OnItemClickListener mListener;
+    private final OnItemClickListener mListener;
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
         void onLongItemClick(View view, int position);
     }
 
-    private GestureDetector mGestureDetector;
+    private final GestureDetector mGestureDetector;
 
     RecyclerViewItemClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
         mListener = listener;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
-            public boolean onSingleTapUp(MotionEvent e) {
+            public boolean onSingleTapUp(@NonNull MotionEvent e) {
                 return true;
             }
 
             @Override
-            public void onLongPress(MotionEvent e) {
+            public void onLongPress(@NonNull MotionEvent e) {
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && mListener != null) {
                     mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));

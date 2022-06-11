@@ -94,15 +94,13 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.detail_id :
-                if (!mNickname_Href.equals("")) {
-                    Intent intent = new Intent(this, UserInfo.class);
-                    intent.putExtra("nickname", mNickname);
-                    intent.putExtra("url", mNickname_Href);
-                    startActivity(intent);
-                }
-                break;
+        if (v.getId() == R.id.detail_id){
+            if(!"".equals(mNickname_Href)){
+                Intent intent = new Intent(this, UserInfo.class);
+                intent.putExtra("nickname", mNickname);
+                intent.putExtra("url", mNickname_Href);
+                startActivity(intent);
+            }
         }
     }
 
@@ -114,14 +112,14 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
         위 문제를 해결하기 위해서는 익명 클래스, 로컬 및 내부 클래스 대신 static 중첩 클래스를 사용하거나
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
-        private WeakReference<Detail> mActivityReference;
+        private final WeakReference<Detail> mActivityReference;
         private String asyncTitle; // 제목
         private String asyncId; // 아이디
         private String asyncDate; // 날짜, 시간
         private String asyncRecCount;// 추천
         private String asyncHits;// 조회
         private String asyncHref;// 아이디링크
-        private StringBuffer asyncContent; // 내용
+        private final StringBuffer asyncContent; // 내용
 
         JsoupAsyncTask(Detail context) {
             // 생성자
@@ -224,6 +222,7 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
             // 백그라운드 작업 진행 후 실행될 작업
             final Detail activity = mActivityReference.get(); // Activity 객체 획득
             if (activity.tvContent != null | activity.tvTitle != null | activity.tvId != null | activity.tvDate != null) {
+                assert activity.tvContent != null;
                 activity.tvContent.setHtmlText(asyncContent.toString());
                 activity.tvTitle.setText(asyncTitle);
                 activity.tvId.setText(asyncId);

@@ -86,12 +86,13 @@ public class UserInfo extends AppCompatActivity {
     }
 
     private static class UserInfoAsyncTask extends AsyncTask<Object, Void, Void> {
-        private WeakReference<UserInfo> mActivityReference;
+        private final WeakReference<UserInfo> mActivityReference;
         private String mUserPoint; // 활동점수
         private String mUserFollowing; // 팔로잉
         private String mUserFollower; // 팔로워
-        private ArrayList<String> mActivity;
-        private ArrayList<String> mTitle, mTitleHref;
+        private final ArrayList<String> mActivity;
+        private final ArrayList<String> mTitle;
+        private final ArrayList<String> mTitleHref;
 
         UserInfoAsyncTask(UserInfo context, ArrayList<String> activity, ArrayList<String> title, ArrayList<String> href) {
             // 생성자

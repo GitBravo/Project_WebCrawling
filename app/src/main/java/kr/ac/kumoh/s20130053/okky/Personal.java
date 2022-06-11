@@ -12,7 +12,7 @@ import static android.content.Context.MODE_PRIVATE;
 // 사용예시2. 개인별 옵션 설정 저장가능(미구현)
 
 class Personal {
-    private Context mContext;
+    private final Context mContext;
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 

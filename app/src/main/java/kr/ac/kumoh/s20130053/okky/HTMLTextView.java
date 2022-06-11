@@ -69,7 +69,7 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
     static class LoadImage extends AsyncTask<Object, Void, Bitmap> {
 
         private LevelListDrawable mDrawable;
-        private WeakReference<HTMLTextView> mWeakRefView;
+        private final WeakReference<HTMLTextView> mWeakRefView;
 
         LoadImage(HTMLTextView view) {
             this.mWeakRefView = new WeakReference<>(view);
@@ -134,28 +134,5 @@ public class HTMLTextView extends AppCompatTextView implements Html.ImageGetter 
                 HTMLTextView.setText(t);
             }
         }
-
-
-//        public Bitmap resizeBitmapImage(Bitmap source, int maxResolution) {
-//            int width = source.getWidth();
-//            int height = source.getHeight();
-//            int newWidth = width;
-//            int newHeight = height;
-//            float rate = 0.0f;
-//            if (width > height) {
-//                if (maxResolution < width) {
-//                    rate = maxResolution / (float) width;
-//                    newHeight = (int) (height * rate);
-//                    newWidth = maxResolution;
-//                }
-//            } else {
-//                if (maxResolution < height) {
-//                    rate = maxResolution / (float) height;
-//                    newWidth = (int) (width * rate);
-//                    newHeight = maxResolution;
-//                }
-//            }
-//            return Bitmap.createScaledBitmap(source, newWidth, newHeight, true);
-//        }
     }
 }

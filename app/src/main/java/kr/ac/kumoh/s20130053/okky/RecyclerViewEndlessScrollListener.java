@@ -12,7 +12,7 @@ public abstract class RecyclerViewEndlessScrollListener extends RecyclerView.OnS
     // 남은 아이템 개수가 10개 미만일 때 추가로드
     // 갤럭시S3 에서 보통 한 화면에 8~9개 표시됨
     // 만약 해상도가 높으면 시작하자마자 Load 되서 오류나는 경우 있으니 주의
-    private int visibleThreshold = 10;
+
     // The current offset index of data you have loaded
     private int currentPage = 0;
     // The total number of items in the dataset after the last load
@@ -20,22 +20,12 @@ public abstract class RecyclerViewEndlessScrollListener extends RecyclerView.OnS
     // True if we are still waiting for the last set of data to load.
     private boolean loading = true;
     // Sets the starting page index
-    private int startingPageIndex = 0;
+    private final int startingPageIndex = 0;
 
-    private RecyclerView.LayoutManager mLayoutManager;
+    private final RecyclerView.LayoutManager mLayoutManager;
 
     RecyclerViewEndlessScrollListener(LinearLayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
-    }
-
-    public RecyclerViewEndlessScrollListener(GridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
-    }
-
-    public RecyclerViewEndlessScrollListener(StaggeredGridLayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
-        visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
     }
 
     private int getLastVisibleItem(int[] lastVisibleItemPositions) {
@@ -92,6 +82,7 @@ public abstract class RecyclerViewEndlessScrollListener extends RecyclerView.OnS
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
+        int visibleThreshold = 10;
         if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) { // 남은 글 개수가 15개 미만일때 추가로딩
             currentPage++;
             onLoadMore(currentPage, totalItemCount, view);

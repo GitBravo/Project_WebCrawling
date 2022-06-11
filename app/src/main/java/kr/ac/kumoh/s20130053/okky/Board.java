@@ -8,9 +8,6 @@ import android.os.AsyncTask;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -329,7 +326,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         // 툴바에 부착된 버튼의 액션을 결정
         int itemId = item.getItemId();
-        ActivityResultLauncher<Intent> actRstLchr;
+        //ActivityResultLauncher<Intent> actRstLchr;
         if(itemId == R.id.actionBtn_search) {
             startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
             /*

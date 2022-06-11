@@ -11,9 +11,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterForUserInfo extends RecyclerView.Adapter<RecyclerViewAdapterForUserInfo.ViewHolder> {
-    private Context mContext;
-    private ArrayList<String> mActivity;
-    private ArrayList<String> mTitle;
+    private final Context mContext;
+    private final ArrayList<String> mActivity;
+    private final ArrayList<String> mTitle;
 
     RecyclerViewAdapterForUserInfo(Context context, ArrayList<String> activity, ArrayList<String> title) {
         this.mContext = context;
@@ -26,7 +26,7 @@ public class RecyclerViewAdapterForUserInfo extends RecyclerView.Adapter<Recycle
     public RecyclerViewAdapterForUserInfo.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // 새로운 뷰 생성
         View view = LayoutInflater.from(mContext).inflate(R.layout.recyclerview_item_for_userinfo, parent, false);
-        return new RecyclerViewAdapterForUserInfo.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -40,7 +40,7 @@ public class RecyclerViewAdapterForUserInfo extends RecyclerView.Adapter<Recycle
         return mTitle.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvActivity, tvTitle;
 
         ViewHolder(View view) {
