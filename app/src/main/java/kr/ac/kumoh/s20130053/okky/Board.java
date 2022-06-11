@@ -254,18 +254,20 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 boardTitle = "칼럼";
                 boardURL = "https://okky.kr/articles/columns";
                 isQNA = false;
-            } else if (id == R.id.jobs_ALL) {
+            /*} else if (id == R.id.jobs_ALL) {
                 boardTitle = "Jobs";
                 boardURL = "https://okky.kr/articles/jobs";
                 isQNA = false;
+                */
             } else if (id == R.id.jobs_goodCompany) {
                 boardTitle = "좋은회사/나쁜회사";
                 boardURL = "https://okky.kr/articles/evalcom";
                 isQNA = false;
-            } else if (id == R.id.jobs_opening) {
+            /*} else if (id == R.id.jobs_opening) {
                 boardTitle = "구인";
                 boardURL = "https://okky.kr/articles/recruit";
                 isQNA = false;
+                */
             } else if (id == R.id.jobs_jobHunt) {
                 boardTitle = "구직";
                 boardURL = "https://okky.kr/articles/resumes";

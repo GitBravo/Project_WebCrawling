@@ -73,15 +73,15 @@
 
     <item android:title="Jobs">
         <menu>
-            <item
+            <!--item
                 android:id="@+id/jobs_ALL"
-                android:title="ALL" />
+                android:title="ALL" /-->
             <item
                 android:id="@+id/jobs_goodCompany"
                 android:title="좋은회사/나쁜회사" />
-            <item
+            <!--item
                 android:id="@+id/jobs_opening"
-                android:title="구인" />
+                android:title="구인" /-->
             <item
                 android:id="@+id/jobs_jobHunt"
                 android:title="구직" />
