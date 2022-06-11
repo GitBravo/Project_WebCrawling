@@ -8,6 +8,8 @@ import android.os.AsyncTask;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -74,6 +76,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     // SharedPreferences 객체 선언
     private Personal personal;
 
+    private ActivityResultLauncher<Intent> resultLauncher;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +85,21 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
         // 애드몹 광고 객체 초기화
         MobileAds.initialize(this, initializationStatus -> {});
+
+        resultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if(result.getResultCode() == RESULT_OK){
+                        Intent intent = result.getData();
+                        isSearchComplete = true;
+                        if(intent != null) {
+                            searchKeyword = intent.getStringExtra("searchKeyword");
+                            query = intent.getStringExtra("query");
+                        }
+
+                        setRefresh();
+                    }
+                });
 
         // Board 의 하단 버튼 5개 리스너 부착
         bottomBtn1 = findViewById(R.id.bottomBtn1);
@@ -326,21 +345,9 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     public boolean onOptionsItemSelected(MenuItem item) {
         // 툴바에 부착된 버튼의 액션을 결정
         int itemId = item.getItemId();
-        //ActivityResultLauncher<Intent> actRstLchr;
         if(itemId == R.id.actionBtn_search) {
-            startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
-            /*
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (result.getResultCode() == 100){
-                    // 검색 성공
-                    //isSearchComplete = true;
-                    //searchKeyword = data.getStringExtra("searchKeyword");
-                    //query = data.getStringExtra("query");
-
-                    setRefresh();
-                }
-            });
-            */
+            Intent intent = new Intent(getApplicationContext(), SearchActivityOnKeyboard.class);
+            resultLauncher.launch(intent);
         } else if(itemId == R.id.OptionMenu_setting){
             startActivity(new Intent(this, OptionMenuSetting.class));
         }
