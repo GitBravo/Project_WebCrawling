@@ -124,7 +124,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         isSearchComplete = false; // 검색 여부
 
         // ActionBar 대신 ToolBar 적용
-        setSupportActionBar((androidx.appcompat.widget.Toolbar) findViewById(R.id.toolBar_board));
+        setSupportActionBar(findViewById(R.id.toolBar_board));
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(boardTitle);
 
@@ -293,9 +293,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
         if (v.getId() == R.id.bottomBtn1) {
             sort = "id";
-            getApplication().setTheme(R.style.GrayTheme);
-            setContentView(R.layout.detail);
-
             bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
             bottomBtn2.setBackgroundResource(R.color.colorPrimary);
             bottomBtn3.setBackgroundResource(R.color.colorPrimary);
@@ -309,26 +306,26 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
             bottomBtn4.setBackgroundResource(R.color.colorPrimary);
             bottomBtn5.setBackgroundResource(R.color.colorPrimary);
         } else if (v.getId() == R.id.bottomBtn3) {
-                sort = "noteCount";
-                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn3.setBackgroundResource(R.color.colorPrimaryDark);
-                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+            sort = "noteCount";
+            bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn3.setBackgroundResource(R.color.colorPrimaryDark);
+            bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn5.setBackgroundResource(R.color.colorPrimary);
         } else if (v.getId() == R.id.bottomBtn4) {
-                sort = "scrapCount";
-                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn4.setBackgroundResource(R.color.colorPrimaryDark);
-                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+            sort = "scrapCount";
+            bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn4.setBackgroundResource(R.color.colorPrimaryDark);
+            bottomBtn5.setBackgroundResource(R.color.colorPrimary);
         } else if (v.getId() == R.id.bottomBtn5) {
-                sort = "viewCount";
-                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn5.setBackgroundResource(R.color.colorPrimaryDark);
+            sort = "viewCount";
+            bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn5.setBackgroundResource(R.color.colorPrimaryDark);
         }
         setRefresh();
     }
