@@ -15,7 +15,7 @@
     <string name="btn_viewCount">조회순</string>
 
     <!-- 에러 표시(미사용) -->
-    <string name="err_post">인터넷 연결 불가</string>
+    <string name="err_post">데이터 없음</string>
 
     <!-- 옵션 메뉴 -->
     <string name="Setting">설정</string>
