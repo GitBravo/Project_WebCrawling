@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 33
     defaultConfig {
         applicationId "kr.ac.kumoh.s20130053.okky"
         buildToolsVersion "28.0.3"
         minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 19
-        versionName "1.10.0"
+        targetSdkVersion 33
+        versionCode 21
+        versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -19,21 +19,32 @@ android {
     }
 }
 
+// 앱 의존성
 dependencies {
+    /*
+    ※ API
+    의존 라이브러리 수정시 해당 모듈을 의존하고 있는 모듈들 또한 재빌드
+    A(API) <- B <- C 일 때, C 에서 A 를 접근할 수 있음
+    A 수정시 B 와 C 모두 재빌드
+
+    ※ IMPLEMENTATION
+    의존 라이브러리 수정시 본 모듈까지만 재빌드
+    A(IMPLEMENTATION) <- B <- C 일 때, C 에서 A 를 접근할 수 없음
+    A 수정시 B 까지 재빌드
+    */
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.google.firebase:firebase-ads:18.2.0'
-    implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'com.github.GrenderG:Toasty:1.3.0'
-
-    api 'androidx.appcompat:appcompat:1.1.0'
-    api 'androidx.recyclerview:recyclerview:1.0.0'
-    api 'com.google.android.material:material:1.0.0'
-    api 'androidx.browser:browser:1.0.0'
-    api 'androidx.media:media:1.1.0'
-    api 'androidx.legacy:legacy-support-v4:1.0.0'
-
-    api 'org.jsoup:jsoup:1.11.3'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.browser:browser:1.4.0'
+    implementation 'androidx.media:media:1.6.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.firebase:firebase-ads:21.0.0'
+    implementation 'com.google.firebase:firebase-core:21.0.0'
+    implementation 'com.github.GrenderG:Toasty:1.3.0' // 최신버전 Toasty로 변경 할 경우 소스 수정이 필요하여 기존버전 사용
+    implementation 'org.jsoup:jsoup:1.13.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

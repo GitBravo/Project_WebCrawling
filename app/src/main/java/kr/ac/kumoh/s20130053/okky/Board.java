@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
-
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -27,8 +29,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.gms.ads.MobileAds;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -83,7 +83,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.drawerlayout);
 
         // 애드몹 광고 객체 초기화
-        MobileAds.initialize(this, "ca-app-pub-4355755954533542~2572341570");
+        MobileAds.initialize(this, initializationStatus -> {});
 
         // Board 의 하단 버튼 5개 리스너 부착
         bottomBtn1 = findViewById(R.id.bottomBtn1);
@@ -167,111 +167,103 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
 
         // 네비게이션 뷰 초기화
         NavigationView navigationView = findViewById(R.id.navigationView);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // 현재 리프레쉬중이면 아이템 선택 금지
-                if (mSwipeRefreshLayout.isRefreshing())
-                    return false;
-
-                int id = item.getItemId();
-                if (id == R.id.qna_all) {
-                    boardTitle = "Q&A";
-                    boardURL = "https://okky.kr/articles/questions";
-                    isQNA = true;
-                } else if (id == R.id.qna_tech) {
-                    boardTitle = "Tech Q&A";
-                    boardURL = "https://okky.kr/articles/tech-qna";
-                    isQNA = true;
-                } else if (id == R.id.qna_blockchain) {
-                    boardTitle = "Blockchain Q&A";
-                    boardURL = "https://okky.kr/articles/blockchain-qna";
-                    isQNA = true;
-                } else if (id == R.id.tech_ALL) {
-                    boardTitle = "Tech";
-                    boardURL = "https://okky.kr/articles/tech";
-                    isQNA = false;
-                } else if (id == R.id.tech_news) {
-                    boardTitle = "IT News & 정보";
-                    boardURL = "https://okky.kr/articles/news";
-                    isQNA = false;
-                } else if (id == R.id.tech_tips) {
-                    boardTitle = "Tips & 강좌";
-                    boardURL = "https://okky.kr/articles/tips";
-                    isQNA = false;
-                } else if (id == R.id.community_all) {
-                    boardTitle = "커뮤니티";
-                    boardURL = "https://okky.kr/articles/community";
-                    isQNA = false;
-                } else if (id == R.id.community_notice) {
-                    boardTitle = "공지사항";
-                    boardURL = "https://okky.kr/articles/notice";
-                    isQNA = false;
-                } else if (id == R.id.community_life) {
-                    boardTitle = "사는얘기";
-                    boardURL = "https://okky.kr/articles/life";
-                    isQNA = false;
-                } else if (id == R.id.community_forum) {
-                    boardTitle = "포럼";
-                    boardURL = "https://okky.kr/articles/forum";
-                    isQNA = false;
-                } else if (id == R.id.community_it_event) {
-                    boardTitle = "IT 행사";
-                    boardURL = "https://okky.kr/articles/event";
-                    isQNA = false;
-                } else if (id == R.id.community_study) {
-                    boardTitle = "정기모임/스터디";
-                    boardURL = "https://okky.kr/articles/gathering";
-                    isQNA = false;
-                } else if (id == R.id.community_edu) {
-                    boardTitle = "학원/홍보";
-                    boardURL = "https://okky.kr/articles/promote";
-                    isQNA = false;
-                } else if (id == R.id.column) {
-                    boardTitle = "칼럼";
-                    boardURL = "https://okky.kr/articles/columns";
-                    isQNA = false;
-                } else if (id == R.id.jobs_ALL) {
-                    boardTitle = "Jobs";
-                    boardURL = "https://okky.kr/articles/jobs";
-                    isQNA = false;
-                } else if (id == R.id.jobs_goodCompany) {
-                    boardTitle = "좋은회사/나쁜회사";
-                    boardURL = "https://okky.kr/articles/evalcom";
-                    isQNA = false;
-                } else if (id == R.id.jobs_opening) {
-                    boardTitle = "구인";
-                    boardURL = "https://okky.kr/articles/recruit";
-                    isQNA = false;
-                } else if (id == R.id.jobs_jobHunt) {
-                    boardTitle = "구직";
-                    boardURL = "https://okky.kr/articles/resumes";
-                    isQNA = false;
-                }
-                if (isSearchComplete)
-                    isSearchComplete = false;
-                sort = "id";
-                bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
-                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
-                setRefresh();
-                mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
+        navigationView.setNavigationItemSelectedListener(item -> {
+            // 현재 리프레쉬중이면 아이템 선택 금지
+            if (mSwipeRefreshLayout.isRefreshing())
                 return false;
+
+            int id = item.getItemId();
+            if (id == R.id.qna_all) {
+                boardTitle = "Q&A";
+                boardURL = "https://okky.kr/articles/questions";
+                isQNA = true;
+            } else if (id == R.id.qna_tech) {
+                boardTitle = "Tech Q&A";
+                boardURL = "https://okky.kr/articles/tech-qna";
+                isQNA = true;
+            } else if (id == R.id.qna_blockchain) {
+                boardTitle = "Blockchain Q&A";
+                boardURL = "https://okky.kr/articles/blockchain-qna";
+                isQNA = true;
+            } else if (id == R.id.tech_ALL) {
+                boardTitle = "Tech";
+                boardURL = "https://okky.kr/articles/tech";
+                isQNA = false;
+            } else if (id == R.id.tech_news) {
+                boardTitle = "IT News & 정보";
+                boardURL = "https://okky.kr/articles/news";
+                isQNA = false;
+            } else if (id == R.id.tech_tips) {
+                boardTitle = "Tips & 강좌";
+                boardURL = "https://okky.kr/articles/tips";
+                isQNA = false;
+            } else if (id == R.id.community_all) {
+                boardTitle = "커뮤니티";
+                boardURL = "https://okky.kr/articles/community";
+                isQNA = false;
+            } else if (id == R.id.community_notice) {
+                boardTitle = "공지사항";
+                boardURL = "https://okky.kr/articles/notice";
+                isQNA = false;
+            } else if (id == R.id.community_life) {
+                boardTitle = "사는얘기";
+                boardURL = "https://okky.kr/articles/life";
+                isQNA = false;
+            } else if (id == R.id.community_forum) {
+                boardTitle = "포럼";
+                boardURL = "https://okky.kr/articles/forum";
+                isQNA = false;
+            } else if (id == R.id.community_it_event) {
+                boardTitle = "IT 행사";
+                boardURL = "https://okky.kr/articles/event";
+                isQNA = false;
+            } else if (id == R.id.community_study) {
+                boardTitle = "정기모임/스터디";
+                boardURL = "https://okky.kr/articles/gathering";
+                isQNA = false;
+            } else if (id == R.id.community_edu) {
+                boardTitle = "학원/홍보";
+                boardURL = "https://okky.kr/articles/promote";
+                isQNA = false;
+            } else if (id == R.id.column) {
+                boardTitle = "칼럼";
+                boardURL = "https://okky.kr/articles/columns";
+                isQNA = false;
+            } else if (id == R.id.jobs_ALL) {
+                boardTitle = "Jobs";
+                boardURL = "https://okky.kr/articles/jobs";
+                isQNA = false;
+            } else if (id == R.id.jobs_goodCompany) {
+                boardTitle = "좋은회사/나쁜회사";
+                boardURL = "https://okky.kr/articles/evalcom";
+                isQNA = false;
+            } else if (id == R.id.jobs_opening) {
+                boardTitle = "구인";
+                boardURL = "https://okky.kr/articles/recruit";
+                isQNA = false;
+            } else if (id == R.id.jobs_jobHunt) {
+                boardTitle = "구직";
+                boardURL = "https://okky.kr/articles/resumes";
+                isQNA = false;
             }
+            if (isSearchComplete)
+                isSearchComplete = false;
+            sort = "id";
+            bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
+            bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+            setRefresh();
+            mDrawerLayout.closeDrawer(GravityCompat.START); // 네비게이션 드로어 닫기
+            return false;
         });
 
         // 당겨서 새로고침
         mSwipeRefreshLayout = findViewById(R.id.swipe_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.refreshIcon);
         mSwipeRefreshLayout.setProgressBackgroundColorSchemeResource(R.color.colorBackground);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                setRefresh();
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener(this::setRefresh);
 
         // 최초 실행시 게시글 불러오기
         setRefresh();
@@ -281,50 +273,45 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         if (mSwipeRefreshLayout.isRefreshing())
             return;
-        switch (v.getId()) {
-            case R.id.bottomBtn1:
-                sort = "id";
-                getApplication().setTheme(R.style.GrayTheme);
-                setContentView(R.layout.detail);
 
-                bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
-                bottomBtn2.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
-                break;
-            case R.id.bottomBtn2:
-                sort = "voteCount";
-                bottomBtn1.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn2.setBackgroundResource(R.color.colorPrimaryDark);
-                bottomBtn3.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn4.setBackgroundResource(R.color.colorPrimary);
-                bottomBtn5.setBackgroundResource(R.color.colorPrimary);
-                break;
-            case R.id.bottomBtn3:
+        if (v.getId() == R.id.bottomBtn1) {
+            sort = "id";
+            getApplication().setTheme(R.style.GrayTheme);
+            setContentView(R.layout.detail);
+
+            bottomBtn1.setBackgroundResource(R.color.colorPrimaryDark);
+            bottomBtn2.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+        } else if (v.getId() == R.id.bottomBtn2) {
+            sort = "voteCount";
+            bottomBtn1.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn2.setBackgroundResource(R.color.colorPrimaryDark);
+            bottomBtn3.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn4.setBackgroundResource(R.color.colorPrimary);
+            bottomBtn5.setBackgroundResource(R.color.colorPrimary);
+        } else if (v.getId() == R.id.bottomBtn3) {
                 sort = "noteCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimaryDark);
                 bottomBtn4.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
-                break;
-            case R.id.bottomBtn4:
+        } else if (v.getId() == R.id.bottomBtn4) {
                 sort = "scrapCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn4.setBackgroundResource(R.color.colorPrimaryDark);
                 bottomBtn5.setBackgroundResource(R.color.colorPrimary);
-                break;
-            case R.id.bottomBtn5:
+        } else if (v.getId() == R.id.bottomBtn5) {
                 sort = "viewCount";
                 bottomBtn1.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn2.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn3.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn4.setBackgroundResource(R.color.colorPrimary);
                 bottomBtn5.setBackgroundResource(R.color.colorPrimaryDark);
-                break;
         }
         setRefresh();
     }
@@ -341,13 +328,24 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // 툴바에 부착된 버튼의 액션을 결정
-        switch (item.getItemId()) {
-            case R.id.actionBtn_search:
-                startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
-                break;
-            case R.id.OptionMenu_setting:
-                startActivity(new Intent(this, OptionMenuSetting.class));
-                break;
+        int itemId = item.getItemId();
+        ActivityResultLauncher<Intent> actRstLchr;
+        if(itemId == R.id.actionBtn_search) {
+            startActivityForResult(new Intent(Board.this, SearchActivityOnKeyboard.class), 100);
+            /*
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == 100){
+                    // 검색 성공
+                    //isSearchComplete = true;
+                    //searchKeyword = data.getStringExtra("searchKeyword");
+                    //query = data.getStringExtra("query");
+
+                    setRefresh();
+                }
+            });
+            */
+        } else if(itemId == R.id.OptionMenu_setting){
+            startActivity(new Intent(this, OptionMenuSetting.class));
         }
         return super.onOptionsItemSelected(item) || mToggle.onOptionsItemSelected(item);
     }
@@ -411,8 +409,8 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         위 문제를 해결하기 위해서는 익명 클래스, 로컬 및 내부 클래스 대신 static 중첩 클래스를 사용하거나
         최상위 클래스를 사용해야 한다. 하지만 이 경우 UI View 또는 멤버 변수에 접근하지 못한다는 문제점
         을 갖고 있는데 그에 대한 해결책으로 WeakReference 를 만들어 준다.*/
-        private WeakReference<Board> mActivityReference;
-        private int mPage;
+        private final WeakReference<Board> mActivityReference;
+        private final int mPage;
 
         JsoupAsyncTask(Board context, int page) {
             // 생성자

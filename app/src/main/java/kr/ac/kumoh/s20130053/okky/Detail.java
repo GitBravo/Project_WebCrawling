@@ -82,13 +82,10 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
 
         // 게시물 제목 선택시 최상단 이동
         nestedScrollView = findViewById(R.id.scrollview);
-        findViewById(R.id.detail_title).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nestedScrollView = findViewById(R.id.scrollview);
-                nestedScrollView.scrollTo(0, 0);
-                nestedScrollView.smoothScrollTo(0, 0);
-            }
+        findViewById(R.id.detail_title).setOnClickListener(v -> {
+            nestedScrollView = findViewById(R.id.scrollview);
+            nestedScrollView.scrollTo(0, 0);
+            nestedScrollView.smoothScrollTo(0, 0);
         });
 
         // 게시글 내용 및 덧글 로드

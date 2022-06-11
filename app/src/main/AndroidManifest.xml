@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
     package="kr.ac.kumoh.s20130053.okky">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@drawable/okky_icon"
         android:label="@string/app_name"
+        android:icon="@drawable/okky_icon"
         android:roundIcon="@drawable/okky_roundicon"
-        android:supportsRtl="true"
         android:theme="@style/BaseTheme">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -20,6 +19,7 @@
 
         <activity
             android:name=".Board"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
