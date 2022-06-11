@@ -234,6 +234,14 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 boardTitle = "IT 행사";
                 boardURL = "https://okky.kr/articles/event";
                 isQNA = false;
+            } else if (id == R.id.techbook_review) {
+                boardTitle = "기술 서적 리뷰";
+                boardURL = "https://okky.kr/articles/techbook-review";
+                isQNA = false;
+            } else if (id == R.id.device_review) {
+                boardTitle = "IT 제품 리뷰";
+                boardURL = "https://okky.kr/articles/device-review";
+                isQNA = false;
             } else if (id == R.id.community_study) {
                 boardTitle = "정기모임/스터디";
                 boardURL = "https://okky.kr/articles/gathering";
@@ -452,12 +460,12 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 Document doc; // 타겟 페이지 URL
                 if (activity.isSearchComplete) {
                     // 검색 상황
-                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
-                            + "&max=20&sort=" + activity.sort + "&order=desc" + activity.query).get();
+                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 24)
+                            + "&max=24&sort=" + activity.sort + "&order=desc" + activity.query).get();
                 } else {
                     // 일반 상황
-                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 20)
-                            + "&max=20&sort=" + activity.sort + "&order=desc").get();
+                    doc = Jsoup.connect(activity.boardURL + "?offset=" + (mPage * 24)
+                            + "&max=24&sort=" + activity.sort + "&order=desc").get();
                 }
 
                 // 1. 게시글 제목 2. 게시글 주소
@@ -468,7 +476,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                         ".list-group-item-heading.list-group-item-evaluate a");
                 boardCount = 1;
                 for (Element link : title) {
-                    if (boardCount > 20)
+                    if (boardCount > 24)
                         break;
                     activity.mTitle.add(link.text().trim());
                     activity.mTitle_Href.add(link.attr("abs:href"));
@@ -484,7 +492,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                             ".item-evaluate-count");
                     boardCount = 1;
                     for (Element link : recCount) {
-                        if (boardCount > 40)
+                        if (boardCount > 48)
                             break;
                         activity.mCount.add(link.text().trim());
                         boardCount++;
@@ -499,7 +507,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                             "li");
                     boardCount = 1;
                     for (Element link : recCount) {
-                        if (boardCount > 60)
+                        if (boardCount > 72)
                             break;
                         activity.mCount.add(link.text().trim());
                         boardCount++;
@@ -514,7 +522,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                         ".nickname");
                 boardCount = 1;
                 for (Element link : account) {
-                    if (boardCount > 20)
+                    if (boardCount > 24)
                         break;
                     activity.mId.add(link.text().trim());
                     boardCount++;
@@ -529,7 +537,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                         "span.timeago");
                 boardCount = 1;
                 for (Element link : date) {
-                    if (boardCount > 20)
+                    if (boardCount > 24)
                         break;
                     activity.mDate.add(link.text().trim());
                     boardCount++;
@@ -545,7 +553,6 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
             Board activity = mActivityReference.get(); // Activity 객체 획득
-            activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
             if (activity.isSearchComplete && activity.getSupportActionBar() != null)
                 activity.getSupportActionBar().setTitle(activity.boardTitle + activity.searchKeyword);
             else if (!activity.isSearchComplete && activity.getSupportActionBar() != null)
@@ -563,6 +570,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
                 TextView tv = activity.findViewById(R.id.err_text);
                 tv.setVisibility(View.GONE);
             }
+            activity.mAdapter.notifyDataSetChanged(); // 각 게시글 데이터 출력
         }
     }
 }

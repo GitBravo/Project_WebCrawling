@@ -49,6 +49,12 @@
                 android:id="@+id/community_it_event"
                 android:title="IT 행사" />
             <item
+                android:id="@+id/techbook_review"
+                android:title="기술 서적 리뷰" />
+            <item
+                android:id="@+id/device_review"
+                android:title="IT 제품 리뷰" />
+            <item
                 android:id="@+id/community_study"
                 android:title="정기모임/스터디" />
             <item
