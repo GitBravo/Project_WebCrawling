@@ -52,53 +52,62 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="50dp"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/bottomBtn1"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="15sp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_id"
             android:textColor="@color/colorWrite"
-            android:background="@color/colorPrimary"/>
+            android:textSize="15sp"
+            style="?android:attr/buttonBarButtonStyle" />
+
         <Button
             android:id="@+id/bottomBtn2"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="15sp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_voteCount"
             android:textColor="@color/colorWrite"
-            android:background="@color/colorPrimary"/>
+            android:textSize="15sp"
+            style="?android:attr/buttonBarButtonStyle" />
+
         <Button
             android:id="@+id/bottomBtn3"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="15sp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_noteCount"
             android:textColor="@color/colorWrite"
-            android:background="@color/colorPrimary"/>
+            android:textSize="15sp"
+            style="?android:attr/buttonBarButtonStyle" />
+
         <Button
             android:id="@+id/bottomBtn4"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="15sp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_scrapCount"
             android:textColor="@color/colorWrite"
-            android:background="@color/colorPrimary"/>
+            android:textSize="15sp"
+            style="?android:attr/buttonBarButtonStyle" />
+
         <Button
             android:id="@+id/bottomBtn5"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:textSize="15sp"
             android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
             android:text="@string/btn_viewCount"
             android:textColor="@color/colorWrite"
-            android:background="@color/colorPrimary"/>
+            android:textSize="15sp"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 </LinearLayout>
