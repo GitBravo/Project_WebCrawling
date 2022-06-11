@@ -1,5 +1,6 @@
 package kr.ac.kumoh.s20130053.okky;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -389,6 +390,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         new JsoupAsyncTask(Board.this, currentPage++).execute(); // 새 게시판 글 갱신
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setLocalDataRemove() {
         mTitle.clear();
         mTitle_Href.clear();
@@ -398,6 +400,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
         mAdapter.notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();
@@ -540,6 +543,7 @@ public class Board extends AppCompatActivity implements View.OnClickListener {
             return null;
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업

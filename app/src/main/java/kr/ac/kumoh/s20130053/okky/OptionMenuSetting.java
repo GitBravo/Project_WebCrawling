@@ -2,6 +2,8 @@ package kr.ac.kumoh.s20130053.okky;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import es.dmoral.toasty.Toasty;
 
 public class OptionMenuSetting extends AppCompatActivity {
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

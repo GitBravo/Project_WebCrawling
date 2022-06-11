@@ -1,5 +1,6 @@
 package kr.ac.kumoh.s20130053.okky;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class UserInfo extends AppCompatActivity {
     private RecyclerViewAdapterForUserInfo mAdapter;
     private Personal personal;
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +181,7 @@ public class UserInfo extends AppCompatActivity {
             return null;
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업

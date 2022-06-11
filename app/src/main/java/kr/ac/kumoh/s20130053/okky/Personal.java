@@ -43,14 +43,4 @@ class Personal {
         editor.clear();
         editor.apply();
     }
-
-    // 특정 값(Key Data) 삭제하기
-    /*
-    private void removePreferences(){
-        SharedPreferences pref = mContext.getSharedPreferences("pref", MODE_PRIVATE);
-        SharedPreferences.Editor editor = pref.edit();
-        editor.remove("hi");
-        editor.apply();
-    }
-    */
 }

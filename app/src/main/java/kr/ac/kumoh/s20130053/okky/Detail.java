@@ -1,5 +1,6 @@
 package kr.ac.kumoh.s20130053.okky;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import androidx.core.widget.NestedScrollView;
@@ -217,6 +218,7 @@ public class Detail extends AppCompatActivity implements View.OnClickListener {
             return null;
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void onPostExecute(Void result) {
             // 백그라운드 작업 진행 후 실행될 작업
